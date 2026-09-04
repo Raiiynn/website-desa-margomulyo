@@ -1,0 +1,103 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens extracted from the source concept.
+ * Authority: docs/DESIGN_REFERENCE.md §2 (values) and §5 (corrections).
+ *
+ * Phase 1 defines TOKENS ONLY. Components, typography scale and layout
+ * primitives are Phase 4. Do not add component classes to this file.
+ */
+
+@theme {
+  /* --- Colour -------------------------------------------------------- */
+
+  /* Institutional navy: display headings, primary actions, panels, footer. */
+  --color-navy-900: #002446;
+
+  /* Action blue: links, active navigation, progress fill. */
+  --color-blue-700: #0160a1;
+  --color-blue-600: #1169a6;
+
+  /* Gold. Scarce by design — one element per view (DESIGN_REFERENCE §1).
+     `gold-600` is the reference value, retained for NON-TEXT use only:
+     bars, chip fills, rules, and display figures at or above 18.66px bold
+     / 24px regular, where the 3:1 threshold applies (3.93:1 on white).
+     For text below that size use `gold-700` / `gold-750`, which reach AA. */
+  --color-gold-600: #9e7b36;
+  --color-gold-700: #917131; /* 4.55:1 on white   */
+  --color-gold-750: #8d6e30; /* 4.54:1 on --color-band */
+
+  /* Success / completion. */
+  --color-green-700: #0e7c46;
+  --color-green-800: #037756;
+
+  /* Surfaces. */
+  --color-surface: #ffffff;
+  --color-surface-tint: #f1f8ff;
+  --color-band: #f8f9ff;
+  --color-band-alt: #f4f9ff;
+  --color-border: #e8eef6;
+
+  /* Text. `text-muted` is corrected from the reference's #8991a1, which
+     measured 3.17:1 on white and failed AA at body size. */
+  --color-text-strong: #131c26;
+  --color-text-body: #667085;
+  --color-text-muted: #6e7789; /* 4.50:1 on white */
+
+  /* --- Typography ----------------------------------------------------- */
+
+  /* Wired in src/app/layout.tsx via next/font. The reference pairs a
+     high-contrast old-style serif for display against a humanist
+     geometric sans for UI and body (DESIGN_REFERENCE §2.2). */
+  --font-serif: var(--font-source-serif), Georgia, 'Times New Roman', serif;
+  --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
+
+  /* --- Geometry ------------------------------------------------------- */
+
+  --radius-card: 12px;
+  --radius-control: 10px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-text-body);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Financial and statistical figures must align in columns.
+     SOURCE_DATA.md §3.8 carries budget tables where this matters. */
+  table,
+  [data-numeric] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* WCAG 2.2 AA — finding A02: the reference shows no focus states.
+     A visible ring is the floor, not a nicety. */
+  :focus-visible {
+    outline: 2px solid var(--color-blue-700);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* MASTER_PROMPT §23 / CLAUDE.md §11 — motion is always opt-out. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
