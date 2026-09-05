@@ -37,7 +37,7 @@ export default function AgendaPage() {
           {AGENDA.map((item) => (
             <div
               key={item.slug}
-              className="rounded-2xl border border-border bg-white p-6 sm:p-8 hover:border-field-border hover:shadow-sm transition-all"
+              className="rounded-card border border-border bg-white p-6 sm:p-8 hover:border-field-border hover:shadow-sm transition-all"
             >
               <div className="flex items-center gap-3 text-xs text-blue-700 font-semibold mb-3">
                 <Badge variant="blue">{item.label ?? 'Agenda Resmi'}</Badge>
@@ -59,7 +59,7 @@ export default function AgendaPage() {
               )}
 
               {item.description && (
-                <p className="mt-4 text-sm text-text-body leading-relaxed pt-3 border-t border-[#f1f5f9]">
+                <p className="mt-4 text-sm text-text-body leading-relaxed pt-3 border-t border-border">
                   {item.description}
                 </p>
               )}

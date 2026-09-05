@@ -34,11 +34,6 @@ export default function AdminLayout({
         </div>
 
         <div className="flex items-center gap-4 text-xs">
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-white/90">
-            <span className="h-2 w-2 rounded-full bg-green-700" />
-            <span>Pamong Administrator (Demo Shell)</span>
-          </div>
-
           <Link
             href="/"
             className="text-xs font-semibold text-gold-400 hover:text-white transition-colors"

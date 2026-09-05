@@ -19,7 +19,7 @@ export function EmptyState({
 }: EmptyStateProps) {
   return (
     <div
-      className={`rounded-[12px] border border-dashed border-field-border bg-band p-8 sm:p-12 text-center flex flex-col items-center justify-center max-w-lg mx-auto ${className}`}
+      className={`rounded-card border border-dashed border-field-border bg-band p-8 sm:p-12 text-center flex flex-col items-center justify-center max-w-lg mx-auto ${className}`}
     >
       <div className="h-12 w-12 rounded-full bg-border text-text-muted flex items-center justify-center mb-4">
         <HelpCircle size={24} />

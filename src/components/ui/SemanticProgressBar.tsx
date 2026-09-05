@@ -29,7 +29,7 @@ export function SemanticProgressBar({
 
   return (
     <div
-      className={`rounded-[12px] border border-border bg-white p-6 ${className}`}
+      className={`rounded-card border border-border bg-white p-6 ${className}`}
     >
       <div className="flex items-start justify-between gap-4">
         <div>

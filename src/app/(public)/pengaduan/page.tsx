@@ -78,8 +78,8 @@ export default function PengaduanPage() {
         </div>
 
         {/* Accountability & Privacy Standard Strip */}
-        <div className="rounded-2xl border border-border bg-band p-6 sm:p-8 mb-12 shadow-sm">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-[#e2e8f0]">
+        <div className="rounded-card border border-border bg-band p-6 sm:p-8 mb-12 shadow-sm">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-border">
             <div className="space-y-1">
               <span className="text-xs font-semibold uppercase tracking-wider text-blue-700 block">
                 Petugas Penanggung Jawab
@@ -120,7 +120,7 @@ export default function PengaduanPage() {
         {/* Form and Tracking Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start mb-20">
           {/* Formulir Pengaduan (7 cols) */}
-          <div className="lg:col-span-7 rounded-2xl border border-border bg-white p-6 sm:p-8 shadow-sm">
+          <div className="lg:col-span-7 rounded-card border border-border bg-white p-6 sm:p-8 shadow-sm">
             <h2 className="font-serif text-xl font-bold text-navy-900 mb-2">
               Formulir Aduan & Aspirasi Masyarakat
             </h2>
@@ -130,7 +130,7 @@ export default function PengaduanPage() {
             </p>
 
             {submittedToken ? (
-              <div className="rounded-xl border border-green-700/30 bg-green-700/5 p-6 text-center space-y-4">
+              <div className="rounded-card border border-green-700/30 bg-green-700/5 p-6 text-center space-y-4">
                 <div className="h-12 w-12 rounded-full bg-green-700/15 text-green-800 mx-auto flex items-center justify-center">
                   <CheckCircle size={28} />
                 </div>
@@ -165,7 +165,7 @@ export default function PengaduanPage() {
                   <select
                     id="pengaduan-jenis-pengajuan"
                     required
-                    className="w-full rounded-[10px] border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700 bg-white"
+                    className="w-full rounded-control border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700 bg-white"
                   >
                     <option value="PENGADUAN">Laporan Pengaduan Masyarakat</option>
                     <option value="ASPIRASI">Aspirasi & Usulan Pembangunan</option>
@@ -179,7 +179,7 @@ export default function PengaduanPage() {
                   <select
                     id="pengaduan-kategori-laporan"
                     required
-                    className="w-full rounded-[10px] border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700 bg-white"
+                    className="w-full rounded-control border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700 bg-white"
                   >
                     <option value="infrastruktur">Pelaksanaan Pembangunan & Saluran Irigasi</option>
                     <option value="pelayanan">Pelayanan Administrasi & Pamong</option>
@@ -196,7 +196,7 @@ export default function PengaduanPage() {
                   <select
                     id="pengaduan-wilayah-padukuhan-terkait"
                     required
-                    className="w-full rounded-[10px] border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700 bg-white"
+                    className="w-full rounded-control border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700 bg-white"
                   >
                     <option value="">Pilih Padukuhan Terkait</option>
                     {PADUKUHAN.map((pad) => (
@@ -217,7 +217,7 @@ export default function PengaduanPage() {
                     type="text"
                     required
                     placeholder="Tuliskan pokok persoalan secara ringkas..."
-                    className="w-full rounded-[10px] border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
+                    className="w-full rounded-control border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                   />
                 </div>
 
@@ -231,12 +231,12 @@ export default function PengaduanPage() {
                     required
                     maxLength={1000}
                     placeholder="Jelaskan secara runtut lokasi kejadian, pihak terkait, atau saran perbaikan yang diusulkan (maksimal 1.000 karakter)..."
-                    className="w-full rounded-[10px] border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
+                    className="w-full rounded-control border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                   />
                 </div>
 
                 {/* Anonymous Option */}
-                <div className="rounded-xl border border-border bg-band p-4 flex items-center justify-between">
+                <div className="rounded-card border border-border bg-band p-4 flex items-center justify-between">
                   <div>
                     <label
                       htmlFor="anonymous-toggle"
@@ -253,7 +253,7 @@ export default function PengaduanPage() {
                     type="checkbox"
                     checked={isAnonymous}
                     onChange={(e) => setIsAnonymous(e.target.checked)}
-                    className="h-4 w-4 rounded border-gray-300 text-blue-700 focus:ring-blue-700"
+                    className="h-5 w-5 shrink-0 rounded border-field-border text-blue-700 focus:ring-blue-700"
                   />
                 </div>
 
@@ -267,7 +267,7 @@ export default function PengaduanPage() {
                     id="pengaduan-nama-lengkap-pelapor"
                         type="text"
                         placeholder="Nama Anda"
-                        className="w-full rounded-[10px] border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
+                        className="w-full rounded-control border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                       />
                     </div>
                     <div>
@@ -278,7 +278,7 @@ export default function PengaduanPage() {
                     id="pengaduan-nomor-whatsapp-pelapor"
                         type="tel"
                         placeholder="08xxxxxxxxxx"
-                        className="w-full rounded-[10px] border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
+                        className="w-full rounded-control border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                       />
                     </div>
                   </div>
@@ -295,7 +295,7 @@ export default function PengaduanPage() {
 
           {/* Kolom Kanan: Pelacakan Token Aduan (5 cols) */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="rounded-2xl border border-border bg-white p-6 sm:p-8 shadow-sm">
+            <div className="rounded-card border border-border bg-white p-6 sm:p-8 shadow-sm">
               <h3 className="font-serif text-lg font-bold text-navy-900 mb-1">
                 Lacak Progres Aduan
               </h3>
@@ -314,7 +314,7 @@ export default function PengaduanPage() {
                     value={trackingInput}
                     onChange={(e) => setTrackingInput(e.target.value)}
                     placeholder="Contoh: MGM-2026-AB12CD"
-                    className="w-full rounded-xl border border-field-border pl-9 pr-3.5 py-2 text-xs font-mono uppercase text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
+                    className="w-full rounded-card border border-field-border pl-9 pr-3.5 py-2 text-xs font-mono uppercase text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
                   />
                 </div>
                 <Button type="submit" variant="outline" size="sm" className="w-full">
@@ -323,7 +323,7 @@ export default function PengaduanPage() {
               </form>
 
               {trackingResult && (
-                <div className="mt-6 pt-5 border-t border-[#f1f5f9] space-y-3 text-xs">
+                <div className="mt-6 pt-5 border-t border-border space-y-3 text-xs">
                   <div className="flex items-center justify-between">
                     <span className="font-mono font-bold text-navy-900">
                       {trackingResult.token}
@@ -343,7 +343,7 @@ export default function PengaduanPage() {
             </div>
 
             {/* SOP 5 Tahap Pengaduan */}
-            <div className="rounded-2xl border border-[#d6e7f7] bg-surface-tint p-6 text-xs space-y-3">
+            <div className="rounded-card border border-border-accent bg-surface-tint p-6 text-xs space-y-3">
               <h4 className="font-bold text-sm text-navy-900">
                 Alur Status Penanganan Pengaduan
               </h4>

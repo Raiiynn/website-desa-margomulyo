@@ -56,14 +56,14 @@ export default function KontakPage() {
           {/* Kolom Kiri: Detail Kontak & Jam Pelayanan (7 cols) */}
           <div className="lg:col-span-7 space-y-8">
             {/* Kartu Alamat & Kontak Cepat */}
-            <div className="rounded-2xl border border-border bg-white p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="rounded-card border border-border bg-white p-6 sm:p-8 space-y-6 shadow-sm">
               <h2 className="font-serif text-xl font-bold text-navy-900">
                 Pusat Pelayanan Kantor Kalurahan
               </h2>
 
               <div className="space-y-4 text-sm">
                 <div className="flex items-start gap-3.5">
-                  <div className="h-9 w-9 rounded-lg bg-surface-tint text-blue-700 flex items-center justify-center shrink-0 border border-[#d6e7f7]">
+                  <div className="h-9 w-9 rounded-lg bg-surface-tint text-blue-700 flex items-center justify-center shrink-0 border border-border-accent">
                     <MapPin size={18} />
                   </div>
                   <div>
@@ -77,7 +77,7 @@ export default function KontakPage() {
                 </div>
 
                 <div className="flex items-start gap-3.5">
-                  <div className="h-9 w-9 rounded-lg bg-surface-tint text-blue-700 flex items-center justify-center shrink-0 border border-[#d6e7f7]">
+                  <div className="h-9 w-9 rounded-lg bg-surface-tint text-blue-700 flex items-center justify-center shrink-0 border border-border-accent">
                     <Phone size={18} />
                   </div>
                   <div>
@@ -101,7 +101,7 @@ export default function KontakPage() {
                 </div>
 
                 <div className="flex items-start gap-3.5">
-                  <div className="h-9 w-9 rounded-lg bg-surface-tint text-blue-700 flex items-center justify-center shrink-0 border border-[#d6e7f7]">
+                  <div className="h-9 w-9 rounded-lg bg-surface-tint text-blue-700 flex items-center justify-center shrink-0 border border-border-accent">
                     <Mail size={18} />
                   </div>
                   <div>
@@ -115,7 +115,7 @@ export default function KontakPage() {
             </div>
 
             {/* Jam Pelayanan Tatap Muka & Daring */}
-            <div className="rounded-2xl border border-border bg-band p-6 sm:p-8 space-y-4">
+            <div className="rounded-card border border-border bg-band p-6 sm:p-8 space-y-4">
               <div className="flex items-center gap-2">
                 <Clock size={18} className="text-blue-700" />
                 <h3 className="font-serif text-lg font-bold text-navy-900">
@@ -124,7 +124,7 @@ export default function KontakPage() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 text-xs">
-                <div className="rounded-xl border border-border bg-white p-4">
+                <div className="rounded-card border border-border bg-white p-4">
                   <span className="font-bold text-navy-900 block">
                     Senin – Kamis
                   </span>
@@ -133,7 +133,7 @@ export default function KontakPage() {
                   </span>
                 </div>
 
-                <div className="rounded-xl border border-border bg-white p-4">
+                <div className="rounded-card border border-border bg-white p-4">
                   <span className="font-bold text-navy-900 block">Jumat</span>
                   <span className="text-blue-700 font-semibold mt-1 block">
                     {hoursFriday}
@@ -145,14 +145,14 @@ export default function KontakPage() {
                 ⚠️ {hoursClosed}
               </p>
 
-              <div className="pt-3 border-t border-[#e2e8f0] text-xs text-text-strong leading-relaxed">
+              <div className="pt-3 border-t border-border text-xs text-text-strong leading-relaxed">
                 <strong className="text-blue-700">Layanan Daring:</strong> {onlineNote}
               </div>
             </div>
           </div>
 
           {/* Kolom Kanan: Formulir Kirim Pesan Cepat (5 cols) */}
-          <div className="lg:col-span-5 rounded-2xl border border-border bg-white p-6 sm:p-8 shadow-sm">
+          <div className="lg:col-span-5 rounded-card border border-border bg-white p-6 sm:p-8 shadow-sm">
             <h2 className="font-serif text-xl font-bold text-navy-900 mb-2">
               Kirim Pesan atau Pertanyaan
             </h2>

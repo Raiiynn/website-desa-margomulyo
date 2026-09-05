@@ -51,8 +51,9 @@ const config = [
   },
 
   {
-    // Config files and Node-side scripts run outside the app runtime.
-    files: ['*.config.{mjs,ts}', 'tests/**/*.ts'],
+    // Config files, tests and Node-side dev scripts run outside the app
+    // runtime, and reporting to stdout is their purpose.
+    files: ['*.config.{mjs,ts}', 'tests/**/*.ts', 'scripts/**/*.{mjs,ts}'],
     rules: {
       'no-console': 'off',
     },

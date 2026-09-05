@@ -53,7 +53,7 @@ export default function PotensiPage() {
               <div
                 key={item.slug}
                 id={item.slug}
-                className="rounded-2xl border border-border bg-white p-6 sm:p-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 hover:border-field-border hover:shadow-sm transition-all"
+                className="rounded-card border border-border bg-white p-6 sm:p-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 hover:border-field-border hover:shadow-sm transition-all"
               >
                 <div className="max-w-2xl space-y-2">
                   <div className="flex items-center gap-2">
@@ -80,7 +80,7 @@ export default function PotensiPage() {
                 </div>
 
                 <div className="shrink-0 pt-2 lg:pt-0 w-full lg:w-auto">
-                  <div className="rounded-xl border border-[#d6e7f7] bg-surface-tint p-4 text-center lg:text-right">
+                  <div className="rounded-card border border-border-accent bg-surface-tint p-4 text-center lg:text-right">
                     <span className="text-[11px] font-bold uppercase tracking-wider text-blue-700 block">
                       Kategori Potensi
                     </span>
@@ -103,7 +103,7 @@ export default function PotensiPage() {
               description="Contoh keberhasilan ekonomi kerakyatan binaan kalurahan dengan sertifikasi legalitas pangan resmi dan pemberdayaan tenaga kerja lokal."
             />
 
-            <div className="rounded-2xl border border-border bg-band p-6 sm:p-10">
+            <div className="rounded-card border border-border bg-band p-6 sm:p-10">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 <div className="lg:col-span-8 space-y-4">
                   <div className="flex items-center gap-2 flex-wrap">
@@ -125,7 +125,7 @@ export default function PotensiPage() {
                     kerja warga sekitar dan menjadi rujukan kuliner oleh-oleh khas Sleman.
                   </p>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-[#e2e8f0]">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-border">
                     <div>
                       <span className="text-[11px] text-text-muted uppercase tracking-wider block font-semibold">
                         Pemilik Usaha
@@ -155,7 +155,7 @@ export default function PotensiPage() {
                   </div>
                 </div>
 
-                <div className="lg:col-span-4 rounded-xl border border-border bg-white p-5 space-y-3">
+                <div className="lg:col-span-4 rounded-card border border-border bg-white p-5 space-y-3">
                   <span className="text-xs font-bold uppercase tracking-wider text-blue-700 block">
                     Informasi Kunjungan & Pesanan
                   </span>
@@ -171,7 +171,7 @@ export default function PotensiPage() {
                       <span>{mbokSri.operatingHours}</span>
                     </div>
 
-                    <div className="pt-2 text-[11px] text-text-muted border-t border-[#f1f5f9]">
+                    <div className="pt-2 text-[11px] text-text-muted border-t border-border">
                       Media Sosial: <strong className="text-navy-900">{mbokSri.socialMedia}</strong>
                     </div>
                   </div>
@@ -193,7 +193,7 @@ export default function PotensiPage() {
             {PADUKUHAN.map((p) => (
               <div
                 key={p.number}
-                className="rounded-xl border border-border bg-white p-5 space-y-2 hover:border-field-border transition-all"
+                className="rounded-card border border-border bg-white p-5 space-y-2 hover:border-field-border transition-all"
               >
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-serif font-bold text-blue-700 text-base">
@@ -203,9 +203,9 @@ export default function PotensiPage() {
                     Margomulyo
                   </span>
                 </div>
-                <h4 className="font-serif text-lg font-bold text-navy-900">
+                <h3 className="font-serif text-lg font-bold text-navy-900">
                   Padukuhan {p.name}
-                </h4>
+                </h3>
                 <p className="text-xs text-text-body leading-relaxed">
                   {p.potentialSummary}
                 </p>

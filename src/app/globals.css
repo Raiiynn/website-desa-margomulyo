@@ -53,6 +53,10 @@
      card edges only and is deliberately NOT reused here. */
   --color-field-border: #7f97b5; /* 3.00:1 on white */
 
+  /* Hairline for cards sitting on --color-surface-tint, where the neutral
+     --color-border disappears against the blue ground. */
+  --color-border-accent: #d6e7f7;
+
   /* Text. `text-muted` is corrected from the reference's #8991a1, which
      measured 3.17:1 on white and failed AA at body size. */
   --color-text-strong: #131c26;

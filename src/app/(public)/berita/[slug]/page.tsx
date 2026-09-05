@@ -85,7 +85,7 @@ export default async function BeritaDetailPage({
           </div>
 
           {/* Lead Excerpt Paragraph */}
-          <div className="my-8 rounded-xl border border-[#d6e7f7] bg-surface-tint p-5 sm:p-6 text-sm sm:text-base font-medium text-navy-900 leading-relaxed">
+          <div className="my-8 rounded-card border border-border-accent bg-surface-tint p-5 sm:p-6 text-sm sm:text-base font-medium text-navy-900 leading-relaxed">
             {article.excerpt}
           </div>
 
@@ -95,7 +95,7 @@ export default async function BeritaDetailPage({
           </div>
 
           {/* Verification / Source Footer Note */}
-          <div className="mt-12 pt-6 border-t border-border rounded-xl bg-band p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-text-muted">
+          <div className="mt-12 pt-6 border-t border-border rounded-card bg-band p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-text-muted">
             <div className="flex items-center gap-2">
               <ShieldCheck size={16} className="text-blue-700 shrink-0" />
               <span>
@@ -121,7 +121,7 @@ export default async function BeritaDetailPage({
               {otherArticles.map((other) => (
                 <div
                   key={other.slug}
-                  className="rounded-xl border border-border bg-white p-5 flex flex-col justify-between hover:border-field-border hover:shadow-sm transition-all"
+                  className="rounded-card border border-border bg-white p-5 flex flex-col justify-between hover:border-field-border hover:shadow-sm transition-all"
                 >
                   <div>
                     <span className="text-[11px] font-bold uppercase tracking-wider text-blue-700 block mb-2">
@@ -131,7 +131,7 @@ export default async function BeritaDetailPage({
                       <Link href={`/berita/${other.slug}`}>{other.title}</Link>
                     </h4>
                   </div>
-                  <div className="mt-4 pt-3 border-t border-[#f1f5f9] text-xs text-text-muted">
+                  <div className="mt-4 pt-3 border-t border-border text-xs text-text-muted">
                     {other.publishedAt && formatDateIndonesian(other.publishedAt)}
                   </div>
                 </div>

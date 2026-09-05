@@ -54,7 +54,7 @@ export default function PemerintahanPage() {
               return (
                 <div
                   key={official.positionTitle}
-                  className={`rounded-xl border p-6 flex flex-col justify-between bg-white transition-all ${
+                  className={`rounded-card border p-6 flex flex-col justify-between bg-white transition-all ${
                     isLurah
                       ? 'border-navy-900 bg-band shadow-sm md:col-span-2 lg:col-span-3'
                       : 'border-border hover:border-field-border'
@@ -90,7 +90,7 @@ export default function PemerintahanPage() {
                     </p>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-[#f1f5f9] flex items-center justify-between text-[11px] text-text-muted">
+                  <div className="mt-4 pt-3 border-t border-border flex items-center justify-between text-[11px] text-text-muted">
                     <span>Kantor Balai Kalurahan</span>
                     <span>Seyegan, Sleman</span>
                   </div>
@@ -112,7 +112,7 @@ export default function PemerintahanPage() {
             {INSTITUTIONS.map((inst) => (
               <div
                 key={inst.slug}
-                className="rounded-xl border border-border bg-white p-6 flex flex-col justify-between hover:border-field-border hover:shadow-sm transition-all"
+                className="rounded-card border border-border bg-white p-6 flex flex-col justify-between hover:border-field-border hover:shadow-sm transition-all"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 text-xs font-semibold uppercase tracking-wider text-blue-700 mb-2">
@@ -131,7 +131,7 @@ export default function PemerintahanPage() {
                   </p>
                 </div>
 
-                <div className="mt-6 pt-3 border-t border-[#f1f5f9] text-xs text-green-800 font-medium flex items-center gap-1.5">
+                <div className="mt-6 pt-3 border-t border-border text-xs text-green-800 font-medium flex items-center gap-1.5">
                   <ShieldCheck size={14} />
                   <span>Mitra Resmi Musrenbang Kalurahan</span>
                 </div>
@@ -148,8 +148,8 @@ export default function PemerintahanPage() {
             description="Daftar nama pemimpin Kalurahan Margomulyo sejak masa kemerdekaan tahun 1946 hingga masa jabatan petahana."
           />
 
-          <div className="max-w-3xl mx-auto rounded-2xl border border-border bg-white p-6 sm:p-10 shadow-sm">
-            <div className="relative border-l-2 border-[#d6e7f7] ml-4 sm:ml-6 pl-6 sm:pl-8 space-y-8">
+          <div className="max-w-3xl mx-auto rounded-card border border-border bg-white p-6 sm:p-10 shadow-sm">
+            <div className="relative border-l-2 border-border-accent ml-4 sm:ml-6 pl-6 sm:pl-8 space-y-8">
               {TYPED_LEADERSHIP_TERMS.map((term) => (
                 <div key={term.sortOrder} className="relative group">
                   {/* Timeline dot */}
@@ -164,9 +164,9 @@ export default function PemerintahanPage() {
 
                   <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
                     <div>
-                      <h4 className="font-serif text-lg font-bold text-navy-900">
+                      <h3 className="font-serif text-lg font-bold text-navy-900">
                         {term.name}
-                      </h4>
+                      </h3>
                       <p className="text-xs text-text-body mt-0.5">
                         {term.description}
                       </p>
@@ -177,7 +177,7 @@ export default function PemerintahanPage() {
                         className={`text-xs font-mono font-semibold px-2.5 py-1 rounded-full ${
                           term.isIncumbent
                             ? 'bg-gold-600/15 text-gold-750 border border-gold-600/30'
-                            : 'bg-[#f1f5f9] text-text-muted'
+                            : 'bg-band text-text-muted'
                         }`}
                       >
                         {term.startYear} – {term.endYear}

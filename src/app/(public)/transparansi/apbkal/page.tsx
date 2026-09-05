@@ -49,7 +49,7 @@ export default function APBKalDetailPage() {
 
         {/* Ringkasan Postur 3 Kotak Utama */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="rounded-xl border border-border bg-white p-6 shadow-sm">
+          <div className="rounded-card border border-border bg-white p-6 shadow-sm">
             <span className="text-xs font-semibold uppercase tracking-wider text-blue-700 block">
               1. Total Pendapatan
             </span>
@@ -61,7 +61,7 @@ export default function APBKalDetailPage() {
             </span>
           </div>
 
-          <div className="rounded-xl border border-border bg-white p-6 shadow-sm">
+          <div className="rounded-card border border-border bg-white p-6 shadow-sm">
             <span className="text-xs font-semibold uppercase tracking-wider text-gold-700 block">
               2. Total Belanja
             </span>
@@ -73,7 +73,7 @@ export default function APBKalDetailPage() {
             </span>
           </div>
 
-          <div className="rounded-xl border border-border bg-white p-6 shadow-sm">
+          <div className="rounded-card border border-border bg-white p-6 shadow-sm">
             <span className="text-xs font-semibold uppercase tracking-wider text-green-700 block">
               3. Pembiayaan Netto
             </span>
@@ -89,8 +89,8 @@ export default function APBKalDetailPage() {
         {/* Tabel Pendapatan & Belanja */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
           {/* Pendapatan */}
-          <div className="rounded-2xl border border-border bg-white p-6 sm:p-8">
-            <h2 className="font-serif text-xl font-bold text-navy-900 mb-4 pb-3 border-b border-[#f1f5f9]">
+          <div className="rounded-card border border-border bg-white p-6 sm:p-8">
+            <h2 className="font-serif text-xl font-bold text-navy-900 mb-4 pb-3 border-b border-border">
               Penerimaan Pendapatan Kalurahan
             </h2>
             <div className="space-y-4">
@@ -113,8 +113,8 @@ export default function APBKalDetailPage() {
           </div>
 
           {/* Belanja Menurut Alokasi */}
-          <div className="rounded-2xl border border-border bg-white p-6 sm:p-8">
-            <h2 className="font-serif text-xl font-bold text-navy-900 mb-4 pb-3 border-b border-[#f1f5f9]">
+          <div className="rounded-card border border-border bg-white p-6 sm:p-8">
+            <h2 className="font-serif text-xl font-bold text-navy-900 mb-4 pb-3 border-b border-border">
               Alokasi Pengeluaran Belanja
             </h2>
             <div className="space-y-4">
@@ -126,7 +126,7 @@ export default function APBKalDetailPage() {
                       {alloc.percentage}% • {formatRupiah(alloc.amount)}
                     </span>
                   </div>
-                  <div className="h-1.5 w-full bg-[#f1f5f9] rounded-full overflow-hidden">
+                  <div className="h-1.5 w-full bg-band rounded-full overflow-hidden">
                     <div
                       className="h-full bg-blue-700 rounded-full"
                       style={{ width: `${alloc.percentage}%` }}
@@ -143,7 +143,7 @@ export default function APBKalDetailPage() {
         </div>
 
         {/* Klasifikasi 5 Bidang Permendagri */}
-        <div className="rounded-2xl border border-border bg-white p-6 sm:p-8 mb-16">
+        <div className="rounded-card border border-border bg-white p-6 sm:p-8 mb-16">
           <SectionHeader
             eyebrow="Klasifikasi Regulasi"
             title="Belanja Berdasarkan 5 Bidang Permendagri"
@@ -154,7 +154,7 @@ export default function APBKalDetailPage() {
             {BUDGET_EXPENDITURE_BIDANG_LINES.map((bidang, idx) => (
               <div
                 key={bidang.label}
-                className="rounded-xl border border-border bg-band p-4 flex flex-col justify-between"
+                className="rounded-card border border-border bg-band p-4 flex flex-col justify-between"
               >
                 <div>
                   <span className="font-serif font-bold text-lg text-blue-700 block mb-1">
@@ -164,7 +164,7 @@ export default function APBKalDetailPage() {
                     {bidang.label}
                   </h3>
                 </div>
-                <div className="mt-4 pt-2 border-t border-[#e2e8f0]">
+                <div className="mt-4 pt-2 border-t border-border">
                   <span className="text-xs font-mono font-bold text-navy-900 block">
                     {bidang.amountLabel}
                   </span>
@@ -178,7 +178,7 @@ export default function APBKalDetailPage() {
         </div>
 
         {/* Pembiayaan & Realisasi Semester II */}
-        <div id="realisasi" className="rounded-2xl border border-border bg-band p-6 sm:p-8 mb-20">
+        <div id="realisasi" className="rounded-card border border-border bg-band p-6 sm:p-8 mb-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             {/* Rincian Pembiayaan */}
             <div className="space-y-4">
@@ -205,7 +205,7 @@ export default function APBKalDetailPage() {
             </div>
 
             {/* Capaian Realisasi */}
-            <div className="rounded-xl border border-[#d6e7f7] bg-white p-6 space-y-4">
+            <div className="rounded-card border border-border-accent bg-white p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase tracking-wider text-green-700">
                   Laporan Realisasi {BUDGET_REALIZATION.period}
@@ -219,7 +219,7 @@ export default function APBKalDetailPage() {
                     <span>Penyerapan Kas SP2D: {BUDGET_REALIZATION.cashPercent}%</span>
                     <span className="font-mono">{formatRupiah(BUDGET_REALIZATION.cashAmount)}</span>
                   </div>
-                  <div className="h-2 w-full bg-[#f1f5f9] rounded-full overflow-hidden">
+                  <div className="h-2 w-full bg-band rounded-full overflow-hidden">
                     <div
                       className="h-full bg-green-700 rounded-full"
                       style={{ width: `${BUDGET_REALIZATION.cashPercent}%` }}
@@ -232,7 +232,7 @@ export default function APBKalDetailPage() {
                     <span>Kemajuan Fisik Pekerjaan: {BUDGET_REALIZATION.physicalPercent}%</span>
                     <span>Target: {BUDGET_REALIZATION.physicalTargetPercent}%</span>
                   </div>
-                  <div className="h-2 w-full bg-[#f1f5f9] rounded-full overflow-hidden">
+                  <div className="h-2 w-full bg-band rounded-full overflow-hidden">
                     <div
                       className="h-full bg-blue-700 rounded-full"
                       style={{ width: `${BUDGET_REALIZATION.physicalPercent}%` }}

@@ -45,7 +45,7 @@ export default function DokumenPage() {
         </div>
 
         {/* Search & Category Filter (Pattern P11) */}
-        <div className="rounded-2xl border border-border bg-band p-6 mb-10">
+        <div className="rounded-card border border-border bg-band p-6 mb-10">
           <div className="flex flex-col md:flex-row items-center gap-4">
             <div className="relative flex-1 w-full">
               <Search
@@ -57,7 +57,7 @@ export default function DokumenPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari judul dokumen atau regulasi kalurahan..."
-                className="w-full rounded-xl border border-field-border bg-white pl-10 pr-4 py-2.5 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
+                className="w-full rounded-card border border-field-border bg-white pl-10 pr-4 py-2.5 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
               />
             </div>
 
@@ -78,7 +78,7 @@ export default function DokumenPage() {
                   className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors ${
                     selectedCategory === cat.key
                       ? 'bg-navy-900 text-white shadow-sm'
-                      : 'bg-white text-text-body border border-[#e2e8f0] hover:bg-[#f1f5f9]'
+                      : 'bg-white text-text-body border border-border hover:bg-band'
                   }`}
                 >
                   {cat.label}
@@ -93,26 +93,26 @@ export default function DokumenPage() {
           {filteredDocs.map((doc) => (
             <div
               key={doc.slug}
-              className="rounded-2xl border border-border bg-white p-6 sm:p-7 flex flex-col justify-between hover:border-field-border hover:shadow-sm transition-all"
+              className="rounded-card border border-border bg-white p-6 sm:p-7 flex flex-col justify-between hover:border-field-border hover:shadow-sm transition-all"
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
                   <Badge variant="blue">{doc.category}</Badge>
-                  <span className="font-mono text-xs text-text-muted bg-band px-2 py-0.5 rounded border border-[#e2e8f0]">
+                  <span className="font-mono text-xs text-text-muted bg-band px-2 py-0.5 rounded border border-border">
                     Tahun {doc.year}
                   </span>
                 </div>
 
-                <h3 className="font-serif text-lg sm:text-xl font-bold text-navy-900 leading-snug">
+                <h2 className="font-serif text-lg sm:text-xl font-bold text-navy-900 leading-snug">
                   {doc.title}
-                </h3>
+                </h2>
 
                 <p className="mt-2 text-xs text-text-body leading-relaxed">
                   {doc.description}
                 </p>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-[#f1f5f9] flex items-center justify-between text-xs">
+              <div className="mt-6 pt-4 border-t border-border flex items-center justify-between text-xs">
                 <span className="text-green-800 font-medium flex items-center gap-1">
                   <CheckCircle size={14} />
                   <span>Dokumen Sah Kalurahan</span>

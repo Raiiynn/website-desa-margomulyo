@@ -35,7 +35,7 @@ export function SiteHeader() {
   }, [mobileMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-white/95 backdrop-blur-md transition-shadow duration-200">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-white transition-shadow duration-200">
       {/* Top micro-bar with official regional indicator */}
       <div className="bg-navy-900 text-white py-1.5 px-4 text-[11px] font-medium tracking-wide">
         <Container className="flex items-center justify-between">
@@ -60,7 +60,7 @@ export function SiteHeader() {
           aria-label="Beranda Kalurahan Margomulyo"
         >
           {/* Official Emblem Mark Badge */}
-          <div className="h-12 w-12 rounded-xl bg-navy-900 text-white flex items-center justify-center font-serif font-bold text-xl tracking-tight shadow-sm border border-blue-700/30 shrink-0 group-hover:bg-blue-700 transition-colors">
+          <div className="h-12 w-12 rounded-card bg-navy-900 text-white flex items-center justify-center font-serif font-bold text-xl tracking-tight shadow-sm border border-blue-700/30 shrink-0 group-hover:bg-blue-700 transition-colors">
             <span className="text-gold-600">M</span>
           </div>
 
@@ -111,7 +111,7 @@ export function SiteHeader() {
         <div className="flex items-center gap-3">
           <Link
             href={HEADER_CTA.href}
-            className="hidden sm:inline-flex items-center gap-2 rounded-[10px] bg-navy-900 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-blue-700 active:bg-[#00172e] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+            className="hidden sm:inline-flex items-center gap-2 rounded-control bg-navy-900 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-blue-700 active:bg-[#00172e] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
           >
             <span>{HEADER_CTA.label}</span>
             <ArrowRight size={14} />
@@ -121,7 +121,7 @@ export function SiteHeader() {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="xl:hidden inline-flex items-center justify-center p-2 rounded-lg text-text-strong hover:bg-[#f1f5f9] focus-visible:outline-2 focus-visible:outline-blue-700"
+            className="xl:hidden inline-flex items-center justify-center p-2 rounded-lg text-text-strong hover:bg-band focus-visible:outline-2 focus-visible:outline-blue-700"
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-navigation"
             aria-label={mobileMenuOpen ? 'Tutup menu' : 'Buka menu utama'}
@@ -135,10 +135,10 @@ export function SiteHeader() {
       {mobileMenuOpen && (
         <div
           id="mobile-navigation"
-          className="fixed inset-0 top-[110px] z-40 bg-white/98 backdrop-blur-lg xl:hidden flex flex-col justify-between border-t border-border p-6 overflow-y-auto"
+          className="fixed inset-0 top-[110px] z-40 bg-white xl:hidden flex flex-col justify-between border-t border-border p-6 overflow-y-auto"
         >
           <div className="space-y-1">
-            <p className="text-xs font-bold uppercase tracking-wider text-text-muted px-3 pb-2 mb-2 border-b border-[#f1f5f9]">
+            <p className="text-xs font-bold uppercase tracking-wider text-text-muted px-3 pb-2 mb-2 border-b border-border">
               Menu Utama Kalurahan
             </p>
             {PRIMARY_NAV.map((item) => {
@@ -167,7 +167,7 @@ export function SiteHeader() {
           <div className="pt-6 mt-6 border-t border-border space-y-3">
             <Link
               href={HEADER_CTA.href}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-navy-900 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors"
+              className="flex w-full items-center justify-center gap-2 rounded-card bg-navy-900 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors"
             >
               <span>{HEADER_CTA.label}</span>
               <ArrowRight size={16} />

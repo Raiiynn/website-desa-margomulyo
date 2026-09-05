@@ -114,7 +114,7 @@ export function SiteFooter() {
               <li>
                 <Link
                   href="/transparansi/apbkal"
-                  className="hover:text-gold-400 transition-colors flex items-center justify-between group"
+                  className="hover:text-gold-400 transition-colors flex items-center justify-between group py-1.5"
                 >
                   <span>Transparansi APBKal 2026</span>
                   <ArrowRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -123,7 +123,7 @@ export function SiteFooter() {
               <li>
                 <Link
                   href="/pembangunan"
-                  className="hover:text-gold-400 transition-colors flex items-center justify-between group"
+                  className="hover:text-gold-400 transition-colors flex items-center justify-between group py-1.5"
                 >
                   <span>Proyek Pembangunan Desa</span>
                   <ArrowRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -132,7 +132,7 @@ export function SiteFooter() {
               <li>
                 <Link
                   href="/layanan"
-                  className="hover:text-gold-400 transition-colors flex items-center justify-between group"
+                  className="hover:text-gold-400 transition-colors flex items-center justify-between group py-1.5"
                 >
                   <span>Layanan Administrasi Kependudukan</span>
                   <ArrowRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -141,7 +141,7 @@ export function SiteFooter() {
               <li>
                 <Link
                   href="/pengaduan"
-                  className="hover:text-gold-400 transition-colors flex items-center justify-between group"
+                  className="hover:text-gold-400 transition-colors flex items-center justify-between group py-1.5"
                 >
                   <span>Layanan Pengaduan & Aspirasi</span>
                   <ArrowRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -150,7 +150,7 @@ export function SiteFooter() {
               <li>
                 <Link
                   href="/dokumen"
-                  className="hover:text-gold-400 transition-colors flex items-center justify-between group"
+                  className="hover:text-gold-400 transition-colors flex items-center justify-between group py-1.5"
                 >
                   <span>Arsip Peraturan Kalurahan</span>
                   <ArrowRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />

@@ -54,10 +54,10 @@ export default function PembangunanPage() {
               key={item.key}
               type="button"
               onClick={() => setFilter(item.key as ProjectFilter)}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
+              className={`px-4 py-2 rounded-card text-xs font-semibold transition-all ${
                 filter === item.key
                   ? 'bg-navy-900 text-white shadow-sm'
-                  : 'bg-white text-text-body border border-[#e2e8f0] hover:bg-band'
+                  : 'bg-white text-text-body border border-border hover:bg-band'
               }`}
             >
               {item.label}
@@ -74,7 +74,7 @@ export default function PembangunanPage() {
             return (
               <div
                 key={project.code}
-                className={`rounded-2xl border bg-white p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 ${
+                className={`rounded-card border bg-white p-6 sm:p-7 flex flex-col justify-between transition-all duration-200 ${
                   isCompleted
                     ? 'border-green-700/30 hover:border-green-700'
                     : 'border-border hover:border-field-border hover:shadow-sm'
@@ -83,7 +83,7 @@ export default function PembangunanPage() {
                 <div>
                   {/* Code and Status Badge */}
                   <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="font-mono text-xs font-bold text-blue-700 bg-surface-tint px-2.5 py-1 rounded border border-[#d6e7f7]">
+                    <span className="font-mono text-xs font-bold text-blue-700 bg-surface-tint px-2.5 py-1 rounded border border-border-accent">
                       {project.code}
                     </span>
 
@@ -100,16 +100,16 @@ export default function PembangunanPage() {
                     </Badge>
                   </div>
 
-                  <h3 className="font-serif text-xl font-bold text-navy-900 leading-snug">
+                  <h2 className="font-serif text-xl font-bold text-navy-900 leading-snug">
                     {project.title}
-                  </h3>
+                  </h2>
 
                   <p className="mt-2 text-xs text-text-body leading-relaxed">
                     {project.description}
                   </p>
 
                   {/* Lokasi & Anggaran */}
-                  <div className="mt-5 pt-4 border-t border-[#f1f5f9] space-y-2 text-xs">
+                  <div className="mt-5 pt-4 border-t border-border space-y-2 text-xs">
                     <div className="flex items-center justify-between">
                       <span className="text-text-muted flex items-center gap-1.5">
                         <MapPin size={14} className="text-blue-700" />
@@ -137,7 +137,7 @@ export default function PembangunanPage() {
                 </div>
 
                 {/* Progress Bar Track */}
-                <div className="mt-6 pt-4 border-t border-[#f1f5f9] space-y-2">
+                <div className="mt-6 pt-4 border-t border-border space-y-2">
                   <div className="flex items-center justify-between text-xs font-semibold">
                     <span className="text-text-muted">Kemajuan Fisik:</span>
                     <span
@@ -153,7 +153,7 @@ export default function PembangunanPage() {
                     </span>
                   </div>
 
-                  <div className="h-2 w-full bg-[#f1f5f9] rounded-full overflow-hidden">
+                  <div className="h-2 w-full bg-band rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${
                         isCompleted

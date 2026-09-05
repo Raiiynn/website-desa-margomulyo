@@ -13,10 +13,10 @@ export function Badge({
 }) {
   const variantStyles: Record<BadgeVariant, string> = {
     navy: 'bg-navy-900 text-white',
-    blue: 'bg-surface-tint text-blue-700 border border-[#d6e7f7]',
+    blue: 'bg-surface-tint text-blue-700 border border-border-accent',
     gold: 'bg-gold-600/10 text-gold-750 border border-gold-600/30',
     green: 'bg-green-700/10 text-green-800 border border-green-700/30',
-    muted: 'bg-[#f4f7fa] text-text-muted border border-[#e2e8f0]',
+    muted: 'bg-[#f4f7fa] text-text-muted border border-border',
     outline: 'border border-border text-text-strong bg-white',
   };
 

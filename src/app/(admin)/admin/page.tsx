@@ -21,7 +21,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="space-y-8">
       {/* Welcome Banner */}
-      <div className="rounded-2xl border border-border bg-white p-6 sm:p-8 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="rounded-card border border-border bg-white p-6 sm:p-8 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-2">
             <Badge variant="navy">Dasbor Eksekutif</Badge>
@@ -48,7 +48,7 @@ export default function AdminDashboardPage() {
 
       {/* KPI Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="rounded-xl border border-border bg-white p-5 shadow-sm">
+        <div className="rounded-card border border-border bg-white p-5 shadow-sm">
           <span className="text-xs font-semibold uppercase tracking-wider text-blue-700 block">
             Layanan Publik Aktif
           </span>
@@ -63,7 +63,7 @@ export default function AdminDashboardPage() {
           </span>
         </div>
 
-        <div className="rounded-xl border border-border bg-white p-5 shadow-sm">
+        <div className="rounded-card border border-border bg-white p-5 shadow-sm">
           <span className="text-xs font-semibold uppercase tracking-wider text-gold-700 block">
             Realisasi Anggaran
           </span>
@@ -78,7 +78,7 @@ export default function AdminDashboardPage() {
           </span>
         </div>
 
-        <div className="rounded-xl border border-border bg-white p-5 shadow-sm">
+        <div className="rounded-card border border-border bg-white p-5 shadow-sm">
           <span className="text-xs font-semibold uppercase tracking-wider text-green-700 block">
             Progres Proyek Fisik
           </span>
@@ -93,7 +93,7 @@ export default function AdminDashboardPage() {
           </span>
         </div>
 
-        <div className="rounded-xl border border-border bg-white p-5 shadow-sm">
+        <div className="rounded-card border border-border bg-white p-5 shadow-sm">
           <span className="text-xs font-semibold uppercase tracking-wider text-navy-900 block">
             Warta & Publikasi
           </span>
@@ -113,13 +113,13 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left 7 cols: Modul Administrasi Pamong */}
         <div className="lg:col-span-7 space-y-6">
-          <div className="rounded-2xl border border-border bg-white p-6 shadow-sm">
-            <h2 className="font-serif text-lg font-bold text-navy-900 mb-4 pb-3 border-b border-[#f1f5f9]">
+          <div className="rounded-card border border-border bg-white p-6 shadow-sm">
+            <h2 className="font-serif text-lg font-bold text-navy-900 mb-4 pb-3 border-b border-border">
               Modul Tata Kelola Kalurahan
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div className="rounded-xl border border-border p-4 hover:border-blue-700 transition-colors">
+              <div className="rounded-card border border-border p-4 hover:border-blue-700 transition-colors">
                 <div className="flex items-center justify-between mb-1">
                   <h3 className="font-bold text-navy-900">Pengaduan Warga</h3>
                   <Badge variant="blue">Respons Aktif</Badge>
@@ -127,14 +127,14 @@ export default function AdminDashboardPage() {
                 <p className="text-text-body leading-relaxed">
                   Lacak dan proses aduan masuk dengan SLA maksimal 1x24 jam kerja.
                 </p>
-                <div className="mt-3 pt-2 border-t border-[#f1f5f9] flex justify-end">
+                <div className="mt-3 pt-2 border-t border-border flex justify-end">
                   <Link href="/pengaduan" className="font-semibold text-blue-700">
                     Buka Kanal Aduan →
                   </Link>
                 </div>
               </div>
 
-              <div className="rounded-xl border border-border p-4 hover:border-blue-700 transition-colors">
+              <div className="rounded-card border border-border p-4 hover:border-blue-700 transition-colors">
                 <div className="flex items-center justify-between mb-1">
                   <h3 className="font-bold text-navy-900">Publikasi Warta</h3>
                   <Badge variant="green">{publishedNewsCount} Terbit</Badge>
@@ -142,14 +142,14 @@ export default function AdminDashboardPage() {
                 <p className="text-text-body leading-relaxed">
                   Kelola rilis berita resmi, pengumuman bansos, dan agenda kalurahan.
                 </p>
-                <div className="mt-3 pt-2 border-t border-[#f1f5f9] flex justify-end">
+                <div className="mt-3 pt-2 border-t border-border flex justify-end">
                   <Link href="/berita" className="font-semibold text-blue-700">
                     Buka Arsip Warta →
                   </Link>
                 </div>
               </div>
 
-              <div className="rounded-xl border border-border p-4 hover:border-blue-700 transition-colors">
+              <div className="rounded-card border border-border p-4 hover:border-blue-700 transition-colors">
                 <div className="flex items-center justify-between mb-1">
                   <h3 className="font-bold text-navy-900">APBKal & Realisasi</h3>
                   <Badge variant="gold">TA 2026</Badge>
@@ -157,14 +157,14 @@ export default function AdminDashboardPage() {
                 <p className="text-text-body leading-relaxed">
                   Pemutakhiran neraca pendapatan, alokasi bidang, dan penyerapan SP2D.
                 </p>
-                <div className="mt-3 pt-2 border-t border-[#f1f5f9] flex justify-end">
+                <div className="mt-3 pt-2 border-t border-border flex justify-end">
                   <Link href="/transparansi/apbkal" className="font-semibold text-blue-700">
                     Rincian APBKal →
                   </Link>
                 </div>
               </div>
 
-              <div className="rounded-xl border border-border p-4 hover:border-blue-700 transition-colors">
+              <div className="rounded-card border border-border p-4 hover:border-blue-700 transition-colors">
                 <div className="flex items-center justify-between mb-1">
                   <h3 className="font-bold text-navy-900">Proyek Pembangunan</h3>
                   <Badge variant="navy">5 Paket TPK</Badge>
@@ -172,7 +172,7 @@ export default function AdminDashboardPage() {
                 <p className="text-text-body leading-relaxed">
                   Pantau kemajuan fisik corblok, irigasi, dan sarana warga di padukuhan.
                 </p>
-                <div className="mt-3 pt-2 border-t border-[#f1f5f9] flex justify-end">
+                <div className="mt-3 pt-2 border-t border-border flex justify-end">
                   <Link href="/pembangunan" className="font-semibold text-blue-700">
                     Tracker Proyek →
                   </Link>
@@ -182,8 +182,8 @@ export default function AdminDashboardPage() {
           </div>
 
           {/* Audit Log / Riwayat Perubahan Terbaru */}
-          <div className="rounded-2xl border border-border bg-white p-6 shadow-sm">
-            <h2 className="font-serif text-lg font-bold text-navy-900 mb-4 pb-3 border-b border-[#f1f5f9]">
+          <div className="rounded-card border border-border bg-white p-6 shadow-sm">
+            <h2 className="font-serif text-lg font-bold text-navy-900 mb-4 pb-3 border-b border-border">
               Riwayat Aktivitas Tata Kelola (Audit Trail)
             </h2>
             <div className="space-y-3 text-xs">
@@ -209,7 +209,7 @@ export default function AdminDashboardPage() {
               ].map((log, idx) => (
                 <div
                   key={idx}
-                  className="flex items-start justify-between gap-4 p-3 rounded-xl bg-band border border-border"
+                  className="flex items-start justify-between gap-4 p-3 rounded-card bg-band border border-border"
                 >
                   <div>
                     <span className="font-semibold text-text-strong block">
@@ -235,7 +235,7 @@ export default function AdminDashboardPage() {
 
         {/* Right 5 cols: Informasi Tim Kerja & Catatan RBAC */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="rounded-2xl border border-[#d6e7f7] bg-surface-tint p-6 text-xs text-blue-700 space-y-4">
+          <div className="rounded-card border border-border-accent bg-surface-tint p-6 text-xs text-blue-700 space-y-4">
             <h3 className="font-bold text-sm text-navy-900 flex items-center gap-1.5">
               <ShieldCheck size={18} className="text-blue-700" />
               <span>Pemberitahuan Fondasi Keamanan & RBAC</span>
@@ -246,12 +246,12 @@ export default function AdminDashboardPage() {
               autentikasi dan izin akses berbasis peran (OWNER, ADMIN, EDITOR, OPERATOR)
               diterapkan di lapisan server pada tahap integrasi backend.
             </p>
-            <div className="pt-2 border-t border-[#d6e7f7] text-[11px] text-text-muted">
+            <div className="pt-2 border-t border-border-accent text-[11px] text-text-muted">
               Status Sistem: Siap untuk pengkoneksian Supabase Auth & Session Guard.
             </div>
           </div>
 
-          <div className="rounded-2xl border border-border bg-white p-6 shadow-sm space-y-3">
+          <div className="rounded-card border border-border bg-white p-6 shadow-sm space-y-3">
             <h3 className="font-serif text-base font-bold text-navy-900">
               Kontak Tim Pendamping IT Desa
             </h3>

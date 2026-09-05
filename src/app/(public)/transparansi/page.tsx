@@ -50,10 +50,10 @@ export default function TransparansiPage() {
           {/* Pintu 1: APBKal */}
           <Link
             href="/transparansi/apbkal"
-            className="group rounded-2xl border border-border bg-white p-6 hover:border-blue-700 hover:shadow-md transition-all flex flex-col justify-between"
+            className="group rounded-card border border-border bg-white p-6 hover:border-blue-700 hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="h-10 w-10 rounded-xl bg-surface-tint text-blue-700 flex items-center justify-center font-bold text-sm mb-4">
+              <div className="h-10 w-10 rounded-card bg-surface-tint text-blue-700 flex items-center justify-center font-bold text-sm mb-4">
                 01
               </div>
               <h2 className="font-serif text-xl font-bold text-navy-900 group-hover:text-blue-700 transition-colors">
@@ -64,7 +64,7 @@ export default function TransparansiPage() {
                 serta pembiayaan netto SiLPA desa.
               </p>
             </div>
-            <div className="mt-6 pt-4 border-t border-[#f1f5f9] flex items-center justify-between text-xs font-semibold text-blue-700">
+            <div className="mt-6 pt-4 border-t border-border flex items-center justify-between text-xs font-semibold text-blue-700">
               <span>Buka Rincian Neraca</span>
               <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
             </div>
@@ -73,10 +73,10 @@ export default function TransparansiPage() {
           {/* Pintu 2: Realisasi Anggaran */}
           <Link
             href="/transparansi/apbkal#realisasi"
-            className="group rounded-2xl border border-border bg-white p-6 hover:border-green-700 hover:shadow-md transition-all flex flex-col justify-between"
+            className="group rounded-card border border-border bg-white p-6 hover:border-green-700 hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="h-10 w-10 rounded-xl bg-green-700/10 text-green-700 flex items-center justify-center font-bold text-sm mb-4">
+              <div className="h-10 w-10 rounded-card bg-green-700/10 text-green-700 flex items-center justify-center font-bold text-sm mb-4">
                 02
               </div>
               <h2 className="font-serif text-xl font-bold text-navy-900 group-hover:text-green-700 transition-colors">
@@ -87,7 +87,7 @@ export default function TransparansiPage() {
                 capaian fisik {BUDGET_REALIZATION.physicalPercent}% (+2% di atas target).
               </p>
             </div>
-            <div className="mt-6 pt-4 border-t border-[#f1f5f9] flex items-center justify-between text-xs font-semibold text-green-700">
+            <div className="mt-6 pt-4 border-t border-border flex items-center justify-between text-xs font-semibold text-green-700">
               <span>Capaian Penyerapan</span>
               <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
             </div>
@@ -96,10 +96,10 @@ export default function TransparansiPage() {
           {/* Pintu 3: Proyek Pembangunan */}
           <Link
             href="/pembangunan"
-            className="group rounded-2xl border border-border bg-white p-6 hover:border-gold-600 hover:shadow-md transition-all flex flex-col justify-between"
+            className="group rounded-card border border-border bg-white p-6 hover:border-gold-600 hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="h-10 w-10 rounded-xl bg-gold-600/15 text-gold-750 flex items-center justify-center font-bold text-sm mb-4">
+              <div className="h-10 w-10 rounded-card bg-gold-600/15 text-gold-750 flex items-center justify-center font-bold text-sm mb-4">
                 03
               </div>
               <h2 className="font-serif text-xl font-bold text-navy-900 group-hover:text-gold-600 transition-colors">
@@ -110,7 +110,7 @@ export default function TransparansiPage() {
                 saluran irigasi, corblok jalan tani, dan sarana warga.
               </p>
             </div>
-            <div className="mt-6 pt-4 border-t border-[#f1f5f9] flex items-center justify-between text-xs font-semibold text-gold-750">
+            <div className="mt-6 pt-4 border-t border-border flex items-center justify-between text-xs font-semibold text-gold-750">
               <span>Daftar Proyek Fisik</span>
               <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
             </div>
@@ -119,10 +119,10 @@ export default function TransparansiPage() {
           {/* Pintu 4: Arsip Dokumen Publik */}
           <Link
             href="/dokumen"
-            className="group rounded-2xl border border-border bg-white p-6 hover:border-blue-700 hover:shadow-md transition-all flex flex-col justify-between"
+            className="group rounded-card border border-border bg-white p-6 hover:border-blue-700 hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="h-10 w-10 rounded-xl bg-surface-tint text-blue-700 flex items-center justify-center font-bold text-sm mb-4">
+              <div className="h-10 w-10 rounded-card bg-surface-tint text-blue-700 flex items-center justify-center font-bold text-sm mb-4">
                 04
               </div>
               <h2 className="font-serif text-xl font-bold text-navy-900 group-hover:text-blue-700 transition-colors">
@@ -133,7 +133,7 @@ export default function TransparansiPage() {
                 LAKIP, LPPKal, RKPKal, dan RPJMKal.
               </p>
             </div>
-            <div className="mt-6 pt-4 border-t border-[#f1f5f9] flex items-center justify-between text-xs font-semibold text-blue-700">
+            <div className="mt-6 pt-4 border-t border-border flex items-center justify-between text-xs font-semibold text-blue-700">
               <span>Unduh Arsip Regulasi</span>
               <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
             </div>
@@ -141,7 +141,7 @@ export default function TransparansiPage() {
         </div>
 
         {/* Ringkasan Eksekutif APBKal 2026 */}
-        <div className="rounded-2xl border border-border bg-white p-6 sm:p-10 mb-16 shadow-sm">
+        <div className="rounded-card border border-border bg-white p-6 sm:p-10 mb-16 shadow-sm">
           <SectionHeader
             eyebrow="Tahun Anggaran 2026"
             title="Ringkasan Postur Keuangan Desa"
@@ -151,7 +151,7 @@ export default function TransparansiPage() {
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-2">
-            <div className="rounded-xl border border-border bg-band p-5">
+            <div className="rounded-card border border-border bg-band p-5">
               <span className="text-[11px] font-bold uppercase tracking-wider text-blue-700 block">
                 Pendapatan
               </span>
@@ -163,7 +163,7 @@ export default function TransparansiPage() {
               </span>
             </div>
 
-            <div className="rounded-xl border border-border bg-band p-5">
+            <div className="rounded-card border border-border bg-band p-5">
               <span className="text-[11px] font-bold uppercase tracking-wider text-gold-750 block">
                 Belanja Kalurahan
               </span>
@@ -175,7 +175,7 @@ export default function TransparansiPage() {
               </span>
             </div>
 
-            <div className="rounded-xl border border-border bg-band p-5">
+            <div className="rounded-card border border-border bg-band p-5">
               <span className="text-[11px] font-bold uppercase tracking-wider text-green-700 block">
                 Pembiayaan Netto
               </span>
@@ -187,7 +187,7 @@ export default function TransparansiPage() {
               </span>
             </div>
 
-            <div className="rounded-xl border border-green-700/30 bg-green-700/5 p-5">
+            <div className="rounded-card border border-green-700/30 bg-green-700/5 p-5">
               <span className="text-[11px] font-bold uppercase tracking-wider text-green-800 block">
                 Status Neraca
               </span>
@@ -209,29 +209,77 @@ export default function TransparansiPage() {
             description="5 gerbang pengawasan partisipatif mulai dari rembug warga padukuhan hingga pemeriksaan inspektorat."
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {BUDGET_CYCLE_STAGES.map((st) => (
-              <div
-                key={st.stageNumber}
-                className="rounded-xl border border-border bg-white p-5 flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-serif font-bold text-lg text-navy-900">
-                      0{st.stageNumber}
+          {/*
+            P10 — five accountability gates as a timeline, not five loose cards.
+            The rail is what makes it read as a sequence.
+
+            Desktop keeps the reference's horizontal composition. Below lg it
+            rotates to a vertical rail rather than shrinking five columns into
+            illegibility, per the responsive brief. The marker encodes progress
+            as well as colour: completed gates are filled, the active gate is
+            ringed, and upcoming gates stay outlined.
+          */}
+          <ol className="relative mt-10 lg:grid lg:grid-cols-5 lg:gap-4">
+            {/* Horizontal rail (desktop only), behind the markers. */}
+            <span
+              aria-hidden="true"
+              className="hidden lg:block absolute left-0 right-0 top-5 h-px bg-border"
+            />
+
+            {BUDGET_CYCLE_STAGES.map((st, idx) => {
+              const isDone = st.statusLabel.toLowerCase().includes('tuntas');
+              const isActive = st.statusLabel.toLowerCase().includes('berjalan');
+              const marker = isDone
+                ? 'bg-navy-900 text-white border-navy-900'
+                : isActive
+                  ? 'bg-blue-700 text-white border-blue-700 ring-4 ring-blue-700/15'
+                  : 'bg-white text-text-muted border-border';
+              const isLast = idx === BUDGET_CYCLE_STAGES.length - 1;
+
+              return (
+                <li
+                  key={st.stageNumber}
+                  className={`relative pl-12 lg:pl-0 ${isLast ? '' : 'pb-8 lg:pb-0'}`}
+                >
+                  {/* Vertical rail segment (mobile/tablet only). */}
+                  {!isLast && (
+                    <span
+                      aria-hidden="true"
+                      className="lg:hidden absolute left-[19px] top-10 bottom-0 w-px bg-border"
+                    />
+                  )}
+
+                  <span
+                    aria-hidden="true"
+                    className={`absolute left-0 top-0 lg:relative lg:mb-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border font-serif text-sm font-bold ${marker}`}
+                  >
+                    {String(st.stageNumber).padStart(2, '0')}
+                  </span>
+
+                  <h3 className="font-bold text-sm text-text-strong">
+                    <span className="lg:hidden text-text-muted">
+                      Tahap {String(st.stageNumber).padStart(2, '0')} &middot;{' '}
                     </span>
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#f1f5f9] text-text-muted">
-                      {st.statusLabel}
-                    </span>
-                  </div>
-                  <h3 className="font-bold text-sm text-text-strong">{st.name}</h3>
-                  <p className="mt-2 text-xs text-text-body leading-relaxed">
+                    {st.name}
+                  </h3>
+                  <p className="mt-1.5 text-xs leading-relaxed text-text-body">
                     {st.description}
                   </p>
-                </div>
-              </div>
-            ))}
-          </div>
+                  <span
+                    className={`mt-3 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                      isDone
+                        ? 'bg-navy-900/5 text-navy-900'
+                        : isActive
+                          ? 'bg-blue-700/10 text-blue-700'
+                          : 'bg-band text-text-muted'
+                    }`}
+                  >
+                    {st.statusLabel}
+                  </span>
+                </li>
+              );
+            })}
+          </ol>
         </div>
       </Container>
     </div>

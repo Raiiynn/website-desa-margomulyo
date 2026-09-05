@@ -73,7 +73,7 @@ export default function LayananPage() {
         </div>
 
         {/* Directory with Search-first header (Pattern P11) */}
-        <div className="rounded-2xl border border-border bg-band p-6 mb-10">
+        <div className="rounded-card border border-border bg-band p-6 mb-10">
           <div className="flex flex-col md:flex-row items-center gap-4">
             <div className="relative flex-1 w-full">
               <Search
@@ -85,7 +85,7 @@ export default function LayananPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari jenis surat atau layanan (misal: KTP, NIK, Usaha, Kematian)..."
-                className="w-full rounded-xl border border-field-border bg-white pl-10 pr-4 py-2.5 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
+                className="w-full rounded-card border border-field-border bg-white pl-10 pr-4 py-2.5 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
               />
             </div>
 
@@ -97,7 +97,7 @@ export default function LayananPage() {
                 className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors ${
                   selectedCategory === 'all'
                     ? 'bg-navy-900 text-white shadow-sm'
-                    : 'bg-white text-text-body border border-[#e2e8f0] hover:bg-[#f1f5f9]'
+                    : 'bg-white text-text-body border border-border hover:bg-band'
                 }`}
               >
                 Semua Kategori
@@ -110,7 +110,7 @@ export default function LayananPage() {
                   className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors ${
                     selectedCategory === cat.slug
                       ? 'bg-navy-900 text-white shadow-sm'
-                      : 'bg-white text-text-body border border-[#e2e8f0] hover:bg-[#f1f5f9]'
+                      : 'bg-white text-text-body border border-border hover:bg-band'
                   }`}
                 >
                   {cat.name}
@@ -146,7 +146,7 @@ export default function LayananPage() {
         </div>
 
         {/* Jam Layanan Inset Strip */}
-        <div className="rounded-2xl border border-[#d6e7f7] bg-surface-tint p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-blue-700 mb-12">
+        <div className="rounded-card border border-border-accent bg-surface-tint p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-blue-700 mb-12">
           <div className="space-y-1 text-center md:text-left">
             <h3 className="text-base font-bold text-navy-900">
               Jam Buka Loket Pelayanan Balai Kalurahan

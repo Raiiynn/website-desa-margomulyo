@@ -31,7 +31,7 @@ export function LabelledDataCard({
 }: LabelledDataCardProps) {
   return (
     <div
-      className={`flex flex-col justify-between rounded-[12px] border border-border bg-white p-6 transition-all duration-200 hover:border-field-border hover:shadow-[0_4px_20px_-4px_rgba(0,36,70,0.06)] ${className}`}
+      className={`flex flex-col justify-between rounded-card border border-border bg-white p-6 transition-all duration-200 hover:border-field-border hover:shadow-[0_4px_20px_-4px_rgba(0,36,70,0.06)] ${className}`}
     >
       <div>
         {/* Header row: category + badge / code */}
@@ -43,7 +43,7 @@ export function LabelledDataCard({
           )}
           <div className="flex items-center gap-2">
             {code && (
-              <span className="font-mono text-[11px] text-text-muted bg-band px-2 py-0.5 rounded border border-[#e2e8f0]">
+              <span className="font-mono text-[11px] text-text-muted bg-band px-2 py-0.5 rounded border border-border">
                 {code}
               </span>
             )}
@@ -63,7 +63,7 @@ export function LabelledDataCard({
 
         {/* Labelled key-value pairs (persyaratan, durasi, dll) */}
         {items.length > 0 && (
-          <div className="mt-4 pt-4 border-t border-[#f1f5f9] space-y-2 text-xs">
+          <div className="mt-4 pt-4 border-t border-border space-y-2 text-xs">
             {items.map((item) => (
               <div
                 key={item.label}
@@ -83,7 +83,7 @@ export function LabelledDataCard({
 
       {/* Footer action link */}
       {href && (
-        <div className="mt-6 pt-4 border-t border-[#f1f5f9]">
+        <div className="mt-6 pt-4 border-t border-border">
           <Link
             href={href}
             className="group/link inline-flex items-center justify-between w-full text-xs font-semibold text-blue-700 hover:text-navy-900 transition-colors"

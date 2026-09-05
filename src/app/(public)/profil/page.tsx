@@ -54,7 +54,7 @@ export default function ProfilPage() {
         </div>
 
         {/* Visi & Dasar Hukum Panel */}
-        <div className="rounded-2xl border border-border bg-navy-900 p-8 sm:p-12 text-white relative overflow-hidden mb-16 shadow-md">
+        <div className="rounded-card border border-border bg-navy-900 p-8 sm:p-12 text-white relative overflow-hidden mb-16 shadow-md">
           <div className="max-w-2xl relative z-10 space-y-4">
             <span className="text-xs font-semibold uppercase tracking-widest text-gold-400">
               Visi Pembangunan Kalurahan
@@ -86,7 +86,7 @@ export default function ProfilPage() {
             {MISSIONS.map((misi) => (
               <div
                 key={misi.number}
-                className="rounded-xl border border-border bg-white p-5 flex items-start gap-4 hover:border-field-border hover:shadow-sm transition-all"
+                className="rounded-card border border-border bg-white p-5 flex items-start gap-4 hover:border-field-border hover:shadow-sm transition-all"
               >
                 <div className="h-9 w-9 rounded-lg bg-gold-600/10 text-gold-750 flex items-center justify-center font-serif font-bold text-base shrink-0 border border-gold-600/20">
                   {String(misi.number).padStart(2, '0')}
@@ -119,7 +119,7 @@ export default function ProfilPage() {
             {GOVERNANCE_PILLARS.map((pilar, idx) => (
               <div
                 key={pilar.name}
-                className="rounded-xl border border-border bg-band p-6 text-center space-y-2"
+                className="rounded-card border border-border bg-band p-6 text-center space-y-2"
               >
                 <span className="font-serif text-2xl font-bold text-blue-700 block">
                   0{idx + 1}
@@ -145,8 +145,8 @@ export default function ProfilPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Agama */}
-            <div className="rounded-xl border border-border bg-white p-6">
-              <h3 className="font-semibold text-sm text-text-strong mb-4 pb-2 border-b border-[#f1f5f9]">
+            <div className="rounded-card border border-border bg-white p-6">
+              <h3 className="font-semibold text-sm text-text-strong mb-4 pb-2 border-b border-border">
                 Komposisi Agama
               </h3>
               <div className="space-y-3">
@@ -165,8 +165,8 @@ export default function ProfilPage() {
             </div>
 
             {/* Pendidikan */}
-            <div className="rounded-xl border border-border bg-white p-6">
-              <h3 className="font-semibold text-sm text-text-strong mb-4 pb-2 border-b border-[#f1f5f9]">
+            <div className="rounded-card border border-border bg-white p-6">
+              <h3 className="font-semibold text-sm text-text-strong mb-4 pb-2 border-b border-border">
                 Jenjang Pendidikan
               </h3>
               <div className="space-y-3">
@@ -187,8 +187,8 @@ export default function ProfilPage() {
             </div>
 
             {/* 5 Mata Pencaharian Terbanyak */}
-            <div className="rounded-xl border border-border bg-white p-6">
-              <h3 className="font-semibold text-sm text-text-strong mb-4 pb-2 border-b border-[#f1f5f9]">
+            <div className="rounded-card border border-border bg-white p-6">
+              <h3 className="font-semibold text-sm text-text-strong mb-4 pb-2 border-b border-border">
                 Top 5 Pekerjaan Warga
               </h3>
               <div className="space-y-3">
@@ -226,7 +226,7 @@ export default function ProfilPage() {
             {TYPED_PADUKUHAN.map((pad) => (
               <div
                 key={pad.number}
-                className={`rounded-xl border p-5 flex flex-col justify-between bg-white hover:border-field-border hover:shadow-sm transition-all ${
+                className={`rounded-card border p-5 flex flex-col justify-between bg-white hover:border-field-border hover:shadow-sm transition-all ${
                   pad.isHistoricalCore ? 'border-gold-600/40 bg-[#fdfbf7]' : 'border-border'
                 }`}
               >
@@ -247,7 +247,7 @@ export default function ProfilPage() {
                   </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-[#f1f5f9] flex items-center justify-between text-xs text-text-muted">
+                <div className="mt-4 pt-3 border-t border-border flex items-center justify-between text-xs text-text-muted">
                   <span>Seyegan, Sleman</span>
                   <span className="text-blue-700 font-semibold text-[11px]">
                     Kalurahan Margomulyo

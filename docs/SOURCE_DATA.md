@@ -88,6 +88,11 @@ padukuhan tables (conflict C05) are both unrecoverable from text.
 
 Attributed on p2 to the Rencana Pembangunan Jangka Menengah Kalurahan (RPJMKal).
 
+**Hero headline** (p1 ✅) — verbatim: "Selamat Datang di Kalurahan Margomulyo".
+Recorded during visual QA: the implementation had been carrying a paraphrase of
+the visi as its H1, which put official language in the site's own voice and
+wrapped to four lines at 320px.
+
 **Kata Sambutan Lurah** (p1 ✅) — verbatim. Heading:
 
 > Membangun Margomulyo yang Guyub, Mandiri, dan Berbudaya
@@ -143,6 +148,27 @@ with a one-paragraph definition in the source.
 | Akses | ±100 m utara Kantor Kapanewon Seyegan; via Jl. Kebonagung atau jalur Tempel–Seyegan–Godean | p7 ✅ |
 
 Bentang Utara–Selatan (±2,00 km) and Timur–Barat (±1,00 km) are **withheld** — see conflict C08.
+
+**"Mengenal Kalurahan Margomulyo" section copy** (p1 ✅) — verbatim. Eyebrow
+"WILAYAH STRATEGIS SEYEGAN"; introduction:
+
+> Kalurahan Margomulyo merupakan salah satu kalurahan di Kapanewon Seyegan,
+> Kabupaten Sleman, Daerah Istimewa Yogyakarta. Margomulyo memiliki karakter
+> wilayah perdesaan yang subur dan berada persis di pusat denyut pemerintahan
+> Kapanewon Seyegan.
+
+Three territorial cards, each with a caption:
+
+| Figure | Label | Caption |
+|---|---|---|
+| 515,20 Ha | Luas Wilayah | Didominasi area persawahan teknis beririgasi mandiri dan pemukiman hijau asri. |
+| 13 Padukuhan | Wilayah Dusun | Menampung keanekaragaman paguyuban warga dari Mriyan hingga Gerjen. |
+| 28 RW | Rukun Warga | Koordinasi terpadu pemeliharaan ketertiban, keamanan, dan kebersihan lingkungan. |
+
+The source renders a **fourth** card, "86 RT — Rukun Tetangga". It is
+**withheld** under conflict C05 and must not be published, so this section
+ships as three cards rather than four. Recorded during the UI/UX phase; the
+copy is verified on page 1 but was previously absent from this register.
 
 ### 3.3 Demographics
 

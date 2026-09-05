@@ -1,7 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'gold' | 'ghost';
+export type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'outline'
+  | 'inverse'
+  | 'gold'
+  | 'ghost';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -21,7 +27,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    'inline-flex items-center justify-center font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none rounded-[10px] select-none';
+    'inline-flex items-center justify-center font-medium transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none rounded-control select-none';
 
   const sizeStyles: Record<ButtonSize, string> = {
     sm: 'text-xs px-3.5 py-1.5 gap-1.5',
@@ -36,6 +42,11 @@ export function Button({
       'bg-blue-700 text-white hover:bg-[#0f6bb0] active:bg-[#01528b] focus-visible:outline-navy-900 shadow-sm',
     outline:
       'border border-border bg-white text-text-strong hover:bg-band hover:border-field-border active:bg-surface-tint focus-visible:outline-blue-700',
+    // For use on navy grounds. Overriding `outline` with a className cannot
+    // work — utility order is decided by Tailwind, not the class attribute —
+    // so the inverse treatment is its own variant.
+    inverse:
+      'border border-white/40 bg-white/5 text-white hover:bg-white/15 hover:border-white/60 active:bg-white/20 focus-visible:outline-white',
     gold:
       'bg-gold-600 text-white hover:bg-gold-750 active:bg-[#7b6028] focus-visible:outline-gold-600 shadow-sm',
     ghost:

@@ -17,7 +17,7 @@ export function ContactMessageForm() {
           type="text"
           required
           placeholder="Nama pemohon"
-          className="w-full rounded-[10px] border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
+          className="w-full rounded-control border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
         />
       </div>
 
@@ -30,7 +30,7 @@ export function ContactMessageForm() {
           type="tel"
           required
           placeholder="081234567xxx"
-          className="w-full rounded-[10px] border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
+          className="w-full rounded-control border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
         />
       </div>
 
@@ -41,7 +41,7 @@ export function ContactMessageForm() {
         <select
                     id="kontak-domisili-padukuhan"
           required
-          className="w-full rounded-[10px] border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700 bg-white"
+          className="w-full rounded-control border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700 bg-white"
         >
           <option value="">Pilih Padukuhan Anda</option>
           {PADUKUHAN.map((pad) => (
@@ -62,7 +62,7 @@ export function ContactMessageForm() {
           rows={4}
           required
           placeholder="Tuliskan pertanyaan atau keperluan administrasi Anda..."
-          className="w-full rounded-[10px] border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
+          className="w-full rounded-control border border-field-border px-3.5 py-2 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
         />
       </div>
 

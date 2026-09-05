@@ -50,7 +50,7 @@ export default function BeritaPage() {
         </div>
 
         {/* Directory with Search-first header (Pattern P11) */}
-        <div className="rounded-2xl border border-border bg-band p-6 mb-12">
+        <div className="rounded-card border border-border bg-band p-6 mb-12">
           <div className="flex flex-col md:flex-row items-center gap-4">
             <div className="relative flex-1 w-full">
               <Search
@@ -62,7 +62,7 @@ export default function BeritaPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari judul warta atau kata kunci kegiatan..."
-                className="w-full rounded-xl border border-field-border bg-white pl-10 pr-4 py-2.5 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
+                className="w-full rounded-card border border-field-border bg-white pl-10 pr-4 py-2.5 text-xs text-text-strong focus:border-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-700"
               />
             </div>
 
@@ -74,7 +74,7 @@ export default function BeritaPage() {
                 className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors ${
                   selectedCategory === 'all'
                     ? 'bg-navy-900 text-white shadow-sm'
-                    : 'bg-white text-text-body border border-[#e2e8f0] hover:bg-[#f1f5f9]'
+                    : 'bg-white text-text-body border border-border hover:bg-band'
                 }`}
               >
                 Semua Kategori
@@ -87,7 +87,7 @@ export default function BeritaPage() {
                   className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-colors ${
                     selectedCategory === cat.slug
                       ? 'bg-navy-900 text-white shadow-sm'
-                      : 'bg-white text-text-body border border-[#e2e8f0] hover:bg-[#f1f5f9]'
+                      : 'bg-white text-text-body border border-border hover:bg-band'
                   }`}
                 >
                   {cat.name}
@@ -102,14 +102,14 @@ export default function BeritaPage() {
           {/* News Feed */}
           <div className="lg:col-span-8 space-y-6">
             {filteredNews.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-field-border bg-white p-12 text-center text-xs text-text-body">
+              <div className="rounded-card border border-dashed border-field-border bg-white p-12 text-center text-xs text-text-body">
                 Tidak ada berita yang cocok dengan kriteria pencarian Anda.
               </div>
             ) : (
               filteredNews.map((article) => (
                 <article
                   key={article.slug}
-                  className="rounded-2xl border border-border bg-white p-6 sm:p-7 hover:border-field-border hover:shadow-sm transition-all flex flex-col justify-between"
+                  className="rounded-card border border-border bg-white p-6 sm:p-7 hover:border-field-border hover:shadow-sm transition-all flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-center justify-between gap-2 text-xs text-text-muted mb-2.5">
@@ -133,7 +133,7 @@ export default function BeritaPage() {
                     </p>
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-[#f1f5f9] flex items-center justify-between text-xs">
+                  <div className="mt-6 pt-4 border-t border-border flex items-center justify-between text-xs">
                     <span className="text-text-muted">
                       {article.bylineLabel ?? 'Pemerintah Kalurahan Margomulyo'}
                     </span>
@@ -152,8 +152,8 @@ export default function BeritaPage() {
 
           {/* Agenda & Jadwal Resmi Kegiatan Kalurahan Sidebar */}
           <div className="lg:col-span-4 space-y-6">
-            <div className="rounded-2xl border border-border bg-white p-6 shadow-sm">
-              <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#f1f5f9]">
+            <div className="rounded-card border border-border bg-white p-6 shadow-sm">
+              <div className="flex items-center justify-between pb-3 mb-4 border-b border-border">
                 <h3 className="font-serif text-lg font-bold text-navy-900">
                   Agenda Resmi Desa
                 </h3>
@@ -164,7 +164,7 @@ export default function BeritaPage() {
                 {AGENDA.map((item) => (
                   <div
                     key={item.slug}
-                    className="rounded-xl border border-border bg-band p-4 space-y-2"
+                    className="rounded-card border border-border bg-band p-4 space-y-2"
                   >
                     <div className="flex items-center gap-2 text-xs font-semibold text-blue-700">
                       <Calendar size={14} />
@@ -183,7 +183,7 @@ export default function BeritaPage() {
                     )}
 
                     {item.description && (
-                      <p className="text-[11px] text-text-body leading-relaxed pt-1 border-t border-[#e2e8f0]">
+                      <p className="text-[11px] text-text-body leading-relaxed pt-1 border-t border-border">
                         {item.description}
                       </p>
                     )}
@@ -193,7 +193,7 @@ export default function BeritaPage() {
             </div>
 
             {/* Quick Contact Box */}
-            <div className="rounded-2xl border border-[#d6e7f7] bg-surface-tint p-6 text-xs text-blue-700 space-y-3">
+            <div className="rounded-card border border-border-accent bg-surface-tint p-6 text-xs text-blue-700 space-y-3">
               <h4 className="font-bold text-sm text-navy-900">
                 Kanal Informasi Warga
               </h4>

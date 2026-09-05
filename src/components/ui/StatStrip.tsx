@@ -37,7 +37,7 @@ export function StatStrip({ className = '' }: { className?: string }) {
     <div
       className={`relative z-20 mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8 ${className}`}
     >
-      <div className="rounded-[12px] border border-border bg-white p-6 sm:p-8 shadow-[0_4px_24px_-4px_rgba(0,36,70,0.06)]">
+      <div className="rounded-card border border-border bg-white p-6 sm:p-8 shadow-[0_4px_24px_-4px_rgba(0,36,70,0.06)]">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 divide-y sm:divide-y-0 sm:divide-x divide-border">
           {stats.map((stat, idx) => (
             <div
@@ -63,7 +63,7 @@ export function StatStrip({ className = '' }: { className?: string }) {
         </div>
 
         {/* Mandatory Provenance Line per SOURCE_DATA §6 Rule 4 */}
-        <div className="mt-6 pt-4 border-t border-[#f1f5f9] flex items-center justify-between flex-wrap gap-2 text-xs text-text-muted">
+        <div className="mt-6 pt-4 border-t border-border flex items-center justify-between flex-wrap gap-2 text-xs text-text-muted">
           <div className="flex items-center gap-2">
             <span
               className="h-1.5 w-1.5 rounded-full bg-green-700"
