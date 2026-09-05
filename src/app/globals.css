@@ -27,6 +27,14 @@
   --color-gold-700: #917131; /* 4.55:1 on white   */
   --color-gold-750: #8d6e30; /* 4.54:1 on --color-band */
 
+  /* Gold on a NAVY ground. The reference gold measures only 3.98:1 against
+     --color-navy-900, so small text in the footer, the site header and the
+     admin chrome needs a LIGHTER variant rather than the darker ones above:
+     gold-700 on navy is 3.44:1, which is worse. No single gold can satisfy
+     4.5:1 on both white and navy — the required luminances are mutually
+     exclusive — so the ground decides which token applies. */
+  --color-gold-400: #aa843a; /* 4.53:1 on --color-navy-900 */
+
   /* Success / completion. */
   --color-green-700: #0e7c46;
   --color-green-800: #037756;
@@ -37,6 +45,13 @@
   --color-band: #f8f9ff;
   --color-band-alt: #f4f9ff;
   --color-border: #e8eef6;
+
+  /* Interactive control boundary. WCAG 2.2 AA 1.4.11 requires 3:1 for the
+     visual boundary of a UI component. The slate the UI had been using
+     (#cbd5e1) measures 1.48:1 on white, so a field outline was effectively
+     invisible to low-vision users. `--color-border` above is for decorative
+     card edges only and is deliberately NOT reused here. */
+  --color-field-border: #7f97b5; /* 3.00:1 on white */
 
   /* Text. `text-muted` is corrected from the reference's #8991a1, which
      measured 3.17:1 on white and failed AA at body size. */

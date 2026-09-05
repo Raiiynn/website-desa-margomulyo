@@ -223,7 +223,73 @@ place. The Vitest environment is `node` until then.
 
 ---
 
-## 8. Known constraints
+## 8. Phase 2 status and the interim content path
+
+**The database has never been reached.** The Supabase direct host resolves
+IPv6-only with no route from this environment, and the Supavisor pooler rejects
+the tenant across every region tried. Consequently:
+
+| | |
+|---|---|
+| Prisma schema | Written — 41 tables, 10 enums, 33 FKs, 36 CHECK constraints |
+| Initial migration SQL | Generated offline via `prisma migrate diff`; **never applied** |
+| Seed | Written and idempotent; **never run** |
+| `prisma validate` / `generate` | Pass |
+| Server data layer | Written, typed, tested for boundary safety — **not yet consumed** |
+
+### Interim content path
+
+Public pages currently read `src/data/fixtures.ts`, which re-exports the
+verified seed-data constants **verbatim**. This is deliberate and temporary:
+
+- The values are the same ones the seed writes, so nothing outside the
+  `docs/SOURCE_DATA.md` publication gate can reach the page.
+- `tests/fixtures-parity.test.ts` fails if the two ever diverge.
+- The cost is that content is compiled in at build time, so the admin CMS
+  cannot change the public site.
+
+**Replacement is a swap, not a rewrite.** `src/server/queries/*` already returns
+the same shapes. Once a working connection string exists, pages become async
+server components importing from `@/server/queries/*`, `src/data/fixtures.ts`
+and `tests/fixtures-parity.test.ts` are deleted, and nothing else changes.
+
+### Environment loading
+
+Next.js reads `.env.local`; the Prisma CLI reads only `.env`. After the
+environment file was renamed, every Prisma command failed with
+`P1012: Environment variable not found`. `scripts/with-env.mjs` loads
+`.env.local` (falling back to `.env`) and execs the command, so secrets stay in
+one file. All `db:*` scripts route through it. It uses Node's built-in
+`process.loadEnvFile` and adds no dependency.
+
+---
+
+## 9. Colour tokens and contrast
+
+`src/app/globals.css` is the single source of colour. UI code uses token
+utilities (`text-navy-900`, `bg-band`, `border-field-border`), not hex literals.
+
+Three tokens exist because no single value satisfies WCAG 2.2 AA everywhere:
+
+| Token | Value | Use |
+|---|---|---|
+| `gold-600` | `#9E7B36` | Non-text only — icons, bars, rules, and display text at or above 18.66px bold, where the 3:1 threshold applies |
+| `gold-700` | `#917131` | Small text on white — 4.55:1 |
+| `gold-750` | `#8D6E30` | Small text on `band` — 4.54:1 |
+| `gold-400` | `#AA843A` | Small text on `navy-900` — 4.53:1 |
+
+The reference gold measures 3.98:1 on navy, and the darker variants are *worse*
+there (`gold-700` is 3.44:1). A single gold cannot clear 4.5:1 on both white and
+navy — the required luminances are mutually exclusive — so the ground decides
+the token.
+
+`field-border` (`#7F97B5`, 3.00:1) is separate from `border` (`#E8EEF6`).
+Interactive control boundaries must meet 1.4.11's 3:1; decorative card edges
+need not, and reusing one for the other fails either accessibility or design.
+
+---
+
+## 10. Known constraints
 
 - **Node 22.9.0 is below what the ESLint 9.39 toolchain declares.** Install
   emits `EBADENGINE` for `eslint-visitor-keys`, which wants
