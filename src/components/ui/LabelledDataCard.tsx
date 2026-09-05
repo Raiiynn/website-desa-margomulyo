@@ -57,7 +57,7 @@ export function LabelledDataCard({
         </h3>
 
         {/* Description */}
-        <p className="mt-2 text-sm text-text-body leading-relaxed line-clamp-2">
+        <p className="mt-2 text-sm text-text-body leading-relaxed">
           {description}
         </p>
 
@@ -72,7 +72,7 @@ export function LabelledDataCard({
                 <span className="text-text-muted font-medium shrink-0">
                   {item.label}
                 </span>
-                <span className="text-text-strong text-right font-medium truncate max-w-[200px]">
+                <span className="text-text-strong text-right font-medium break-words min-w-0">
                   {item.value}
                 </span>
               </div>
