@@ -1,0 +1,1099 @@
+// Kalurahan Margomulyo — database schema
+//
+// Authority:
+//   docs/adr/0002-database-auth-storage.md  — Supabase Postgres, Prisma owns
+//                                             the schema; authorization lives
+//                                             in application code, not RLS.
+//   docs/SOURCE_DATA.md                     — the content publication gate.
+//   FULL_BUILD.md §15                       — required entity coverage.
+//
+// Conventions
+//   * Table names are mapped to snake_case for direct psql use; columns stay
+//     camelCase to match the TypeScript surface.
+//   * Money is Decimal(18,2). Rupiah budget figures exceed a 32-bit integer
+//     (Rp 3.910.850.000 > 2_147_483_647), so Int would silently overflow.
+//   * Fields the source withholds or never supplied are nullable and are
+//     seeded NULL. The schema can hold them later without pretending they
+//     are verified today.
+//   * Enums are used wherever the set of states is closed and known.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ===========================================================================
+// Identity & access
+// ===========================================================================
+
+/// Fixed administrative roles (FULL_BUILD §12). Modelled as a table rather
+/// than an enum so permission assignments can change without a migration —
+/// a government office reorganises more often than it redeploys.
+enum RoleKey {
+  OWNER
+  ADMIN
+  EDITOR
+  OPERATOR
+}
+
+model Role {
+  id          String   @id @default(cuid())
+  key         RoleKey  @unique
+  name        String
+  description String?
+  /// Lower rank = higher authority. OWNER is 1. Used for hierarchy checks.
+  rank        Int      @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       User[]
+  permissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(cuid())
+  /// Dotted key, e.g. "news.publish" (FULL_BUILD §12).
+  key         String   @unique
+  description String
+  /// Grouping for the admin permissions screen, e.g. "news", "complaints".
+  group       String
+  createdAt   DateTime @default(now())
+
+  roles RolePermission[]
+
+  @@index([group])
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  createdAt    DateTime @default(now())
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+/// Administrative user.
+///
+/// `id` mirrors the Supabase Auth user id (auth.users.id, a UUID). Supabase
+/// owns credentials and sessions; this table owns authorization and profile.
+/// No password column exists here by design (ADR-0002).
+///
+/// Citizens never get accounts — complaint tracking is by token — so every
+/// row here is staff.
+model User {
+  id        String   @id @db.Uuid
+  email     String   @unique
+  fullName  String
+  roleId    String
+  isActive  Boolean  @default(true)
+  lastSeenAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  role                Role                       @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  auditLogs           AuditLog[]
+  newsAuthored        News[]
+  mediaUploaded       Media[]
+  complaintChanges    ComplaintStatusHistory[]
+  projectUpdates      DevelopmentProjectUpdate[]
+
+  @@index([roleId])
+  @@index([isActive])
+  @@map("users")
+}
+
+/// Append-only record of sensitive administrative actions (FULL_BUILD §14).
+///
+/// Integrity decisions:
+///   * Deleting a user does NOT delete their audit trail (onDelete: SetNull).
+///   * `actorEmail` / `actorName` snapshot the actor at write time, so the
+///     entry stays meaningful after the user row is gone.
+///   * No updatedAt — entries are never edited.
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  actorEmail String?
+  actorName  String?
+  action     String
+  resource   String
+  resourceId String?
+  /// Free-form context (before/after values, reason). The one justified Json
+  /// column: its shape genuinely varies per action.
+  metadata   Json?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([resource, resourceId])
+  @@index([createdAt])
+  @@index([action])
+  @@map("audit_logs")
+}
+
+// ===========================================================================
+// Shared content workflow
+// ===========================================================================
+
+/// DRAFT → REVIEW → PUBLISHED → ARCHIVED (FULL_BUILD §6).
+/// Shared by every publishable content type so one workflow and one set of
+/// permissions govern them all.
+enum ContentStatus {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+// ===========================================================================
+// Territory — the padukuhan spine
+// ===========================================================================
+
+/// The 13 padukuhan. DESIGN_REFERENCE §4 treats these as a spine: the same
+/// entity appears as an administrative unit, a potential profile, a project
+/// location and a complaint domicile. One canonical row, referenced everywhere.
+///
+/// rwCount / rtCount are deliberately NULL. SOURCE_DATA conflict C05: pages 2
+/// and 3 disagree on 9 of 13 padukuhan and neither reconciles with the stated
+/// 86 RT total, so per-padukuhan counts are withheld.
+model Padukuhan {
+  id               String   @id @default(cuid())
+  /// 1-13, the source's own numbering.
+  number           Int      @unique
+  name             String   @unique
+  slug             String   @unique
+  /// Jamblangan is labelled "Padukuhan Induk Historis" (source p2).
+  isHistoricalCore Boolean  @default(false)
+  /// Verified potential summary from source p8.
+  potentialSummary String?
+  rwCount          Int?
+  rtCount          Int?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  officials       GovernmentOfficial[]
+  complaints      Complaint[]
+  localPotentials LocalPotential[]
+  umkm            Umkm[]
+  projects        ProjectPadukuhan[]
+
+  @@map("padukuhan")
+}
+
+// ===========================================================================
+// Government
+// ===========================================================================
+
+enum OfficialKind {
+  LURAH
+  CARIK
+  KAUR
+  KASI
+  DUKUH
+  OTHER
+}
+
+/// Pamong kalurahan.
+///
+/// `name` is NULLABLE and that is the point. SOURCE_DATA V01: the source names
+/// only the Lurah and one Kasi. The positions and their remits are verified;
+/// the people filling them are not. Seeding positions with a null name is
+/// accurate — the office exists, the occupant is unrecorded.
+model GovernmentOfficial {
+  id            String       @id @default(cuid())
+  kind          OfficialKind
+  /// Formal title, e.g. "Kepala Seksi Pemerintahan".
+  positionTitle String
+  /// Javanese alias used by the source, e.g. "Jagabaya", "Ulu-Ulu".
+  positionAlias String?
+  /// Source wording of the remit.
+  remit         String?
+  name          String?
+  /// Set for kind = DUKUH.
+  padukuhanId   String?
+  termStart     Int?
+  termEnd       Int?
+  photoMediaId  String?
+  sortOrder     Int
+  isActive      Boolean      @default(true)
+  /// Internal note, e.g. an open verification question. Never rendered publicly.
+  internalNote  String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  padukuhan  Padukuhan? @relation(fields: [padukuhanId], references: [id], onDelete: SetNull)
+  photoMedia Media?     @relation(fields: [photoMediaId], references: [id], onDelete: SetNull)
+
+  @@unique([padukuhanId, kind])
+  @@index([kind])
+  @@index([sortOrder])
+  @@map("government_officials")
+}
+
+/// Historical leadership (source p2, read from the rendered timeline —
+/// SOURCE_DATA C13). Separate from GovernmentOfficial: these are past terms,
+/// not current offices, and carry no remit or padukuhan.
+model LeadershipTerm {
+  id          String   @id @default(cuid())
+  sortOrder   Int      @unique
+  name        String
+  description String?
+  startYear   Int
+  endYear     Int
+  isIncumbent Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([startYear])
+  @@map("leadership_terms")
+}
+
+enum InstitutionKind {
+  BPKAL
+  LKK
+}
+
+/// BPKal and the Lembaga Kemasyarakatan Kalurahan (source p3).
+model VillageInstitution {
+  id          String          @id @default(cuid())
+  kind        InstitutionKind
+  name        String          @unique
+  slug        String          @unique
+  /// e.g. "Taruna Bhakti Margomulyo".
+  alias       String?
+  description String
+  sortOrder   Int
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([kind])
+  @@map("village_institutions")
+}
+
+/// The 10 Misi Pembangunan Kalurahan (source p2).
+model VillageMission {
+  id          String   @id @default(cuid())
+  number      Int      @unique
+  /// Short label, e.g. "Tata Kelola Internal".
+  label       String
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("village_missions")
+}
+
+/// The 4 Pilar Tata Kelola: Jujur, Amanah, Transparan, Partisipatif (p3).
+model GovernancePillar {
+  id          String   @id @default(cuid())
+  sortOrder   Int      @unique
+  name        String   @unique
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("governance_pillars")
+}
+
+// ===========================================================================
+// Statistics
+// ===========================================================================
+
+/// A dated demographic snapshot.
+///
+/// SOURCE_DATA §6 rule 4: provenance travels with statistics. `referenceDate`
+/// and `sourceLabel` exist so the "per 1 September 2026 · SIK Sleman" line can
+/// never be separated from the figures it describes.
+///
+/// Withheld (nullable, seeded NULL): rtCount (C05), and the SD-level education
+/// rows are simply absent (C07).
+model DemographicSnapshot {
+  id                   String   @id @default(cuid())
+  referenceDate        DateTime @unique @db.Date
+  sourceLabel          String
+  totalPopulation      Int
+  malePopulation       Int
+  femalePopulation     Int
+  households           Int
+  householdsMaleHead   Int
+  householdsFemaleHead Int
+  /// DTKS — penduduk rentan kemiskinan.
+  vulnerablePeople     Int?
+  vulnerablePercent    Decimal? @db.Decimal(5, 2)
+  completionPercent    Decimal? @db.Decimal(5, 2)
+  areaHectares         Decimal  @db.Decimal(10, 2)
+  padukuhanCount       Int
+  rwCount              Int
+  rtCount              Int?
+  isPublished          Boolean  @default(false)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  religions   ReligionCount[]
+  educations  EducationCount[]
+  occupations OccupationCount[]
+
+  @@map("demographic_snapshots")
+}
+
+model ReligionCount {
+  id         String   @id @default(cuid())
+  snapshotId String
+  religion   String
+  people     Int
+  percentage Decimal? @db.Decimal(5, 2)
+  sortOrder  Int
+
+  snapshot DemographicSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+
+  @@unique([snapshotId, religion])
+  @@map("religion_counts")
+}
+
+model EducationCount {
+  id         String   @id @default(cuid())
+  snapshotId String
+  level      String
+  people     Int
+  percentage Decimal? @db.Decimal(5, 2)
+  /// True for the D1-S3 tiers, which nest under the "pendidikan tinggi" total.
+  isTertiary Boolean  @default(false)
+  sortOrder  Int
+
+  snapshot DemographicSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+
+  @@unique([snapshotId, level])
+  @@map("education_counts")
+}
+
+/// Explicitly a top-5 list in the source, not a complete breakdown — so it
+/// must never be totalled (SOURCE_DATA §3.3).
+model OccupationCount {
+  id         String   @id @default(cuid())
+  snapshotId String
+  occupation String
+  people     Int
+  rank       Int
+
+  snapshot DemographicSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+
+  @@unique([snapshotId, occupation])
+  @@unique([snapshotId, rank])
+  @@map("occupation_counts")
+}
+
+// ===========================================================================
+// News, agenda, pages, media
+// ===========================================================================
+
+model NewsCategory {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  /// Present on the source's filter row (p4) as opposed to only appearing as
+  /// an article label. See SOURCE_DATA V20.
+  isFilter  Boolean  @default(false)
+  sortOrder Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  news News[]
+
+  @@map("news_categories")
+}
+
+model News {
+  id           String        @id @default(cuid())
+  slug         String        @unique
+  title        String
+  excerpt      String
+  body         String
+  categoryId   String
+  status       ContentStatus @default(DRAFT)
+  /// Required whenever status = PUBLISHED; enforced by a CHECK constraint.
+  publishedAt  DateTime?
+  authorId     String?
+  /// Source byline, e.g. "Tim Liputan Margomulyo", when no user account maps.
+  bylineLabel  String?
+  coverMediaId String?
+  /// Reading time is DERIVED from body length, never stored: SOURCE_DATA V10
+  /// records the source contradicting itself (3 vs 4 minutes).
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  category   NewsCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  author     User?        @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  coverMedia Media?       @relation(fields: [coverMediaId], references: [id], onDelete: SetNull)
+
+  @@index([status, publishedAt])
+  @@index([categoryId])
+  @@index([publishedAt])
+  @@map("news")
+}
+
+model Agenda {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  title       String
+  description String?
+  /// Source category label, e.g. "Rakor Pamong", "Layanan Keliling".
+  label       String?
+  startsAt    DateTime
+  /// Set for multi-day items, e.g. "hingga 15 Sep 2026".
+  endsAt      DateTime?
+  isAllDay    Boolean       @default(false)
+  location    String?
+  status      ContentStatus @default(DRAFT)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([startsAt])
+  @@index([status, startsAt])
+  @@map("agenda")
+}
+
+/// CMS-managed static page (FULL_BUILD §15).
+model Page {
+  id              String        @id @default(cuid())
+  slug            String        @unique
+  title           String
+  body            String
+  metaDescription String?
+  status          ContentStatus @default(DRAFT)
+  publishedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([status])
+  @@map("pages")
+}
+
+/// Public CMS media (news images, project photos, official documents).
+///
+/// Deliberately NOT used for complaint attachments. Those live in a separate
+/// table backed by a separate private bucket, so a private attachment can
+/// never surface through the media library (ADR-0002).
+model Media {
+  id           String   @id @default(cuid())
+  bucket       String
+  /// Object path within the bucket. Unique per bucket.
+  path         String
+  filename     String
+  mimeType     String
+  sizeBytes    Int
+  width        Int?
+  height       Int?
+  /// Null = not yet provided. Empty string = intentionally decorative.
+  alt          String?
+  caption      String?
+  uploadedById String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  uploadedBy User?                @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  news       News[]
+  officials  GovernmentOfficial[]
+  documents  Document[]
+  projects   DevelopmentProject[]
+  umkm       Umkm[]
+
+  @@unique([bucket, path])
+  @@index([mimeType])
+  @@map("media")
+}
+
+// ===========================================================================
+// Public services
+// ===========================================================================
+
+model ServiceCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  sortOrder   Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  services Service[]
+
+  @@map("service_categories")
+}
+
+model Service {
+  id           String        @id @default(cuid())
+  slug         String        @unique
+  /// Source's own numbering, e.g. "01". Null for the two services the source
+  /// badges instead of numbering.
+  code         String?
+  /// e.g. "Layanan Kilat", "Unggulan 3-in-1".
+  badge        String?
+  name         String
+  description  String
+  /// Verbatim source wording; the source states one requirement phrase per
+  /// service rather than an itemised list, and §7 requires terminology be
+  /// preserved rather than split or paraphrased.
+  requirements String
+  /// e.g. "Maksimal 2 hari kerja".
+  duration     String
+  output       String
+  method       String
+  /// Every documented service is Rp 0 (source p5, "100% bebas pungli").
+  costRupiah   Decimal       @default(0) @db.Decimal(18, 2)
+  /// Step-by-step procedure. NULL for every seeded service: the source shows a
+  /// single global 4-step SOP and a "Rincian Prosedur" link with no content.
+  procedure    String?
+  categoryId   String
+  status       ContentStatus @default(DRAFT)
+  sortOrder    Int
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  category ServiceCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  @@index([categoryId])
+  @@index([status])
+  @@map("services")
+}
+
+/// The global 4-step service SOP (source p5).
+model ServiceProcedureStep {
+  id          String   @id @default(cuid())
+  stepNumber  Int      @unique
+  title       String
+  description String
+  /// Outcome chip, e.g. "Periksa Kelengkapan".
+  outcome     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("service_procedure_steps")
+}
+
+/// The 4 service delivery channels (source p5).
+model ServiceChannel {
+  id          String   @id @default(cuid())
+  sortOrder   Int      @unique
+  name        String   @unique
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("service_channels")
+}
+
+// ===========================================================================
+// Complaints & aspirations
+// ===========================================================================
+
+/// FULL_BUILD §10 lists "Complaints" and "Aspirations" as separate admin
+/// modules, but they share an identical shape and workflow. One table with a
+/// discriminator is correct normalisation, not a polymorphic catch-all.
+enum ComplaintKind {
+  PENGADUAN
+  ASPIRASI
+}
+
+/// Submit → Received → Reviewed → Processing → Resolved → Closed
+/// (FULL_BUILD §10). "Submit" is the action that creates the row, not a state,
+/// so the initial state is RECEIVED.
+enum ComplaintStatus {
+  RECEIVED
+  REVIEWED
+  PROCESSING
+  RESOLVED
+  CLOSED
+}
+
+/// Category of a citizen submission ("Kategori Keperluan" on the source's
+/// contact form). The field is verified to exist; its options are not —
+/// SOURCE_DATA V14 — so this table ships empty and the FK is nullable.
+model ComplaintCategory {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  sortOrder Int
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  complaints Complaint[]
+
+  @@map("complaint_categories")
+}
+
+/// A citizen submission. PRIVATE BY DEFAULT AND BY CONSTRUCTION.
+///
+/// FULL_BUILD §10 and §16 require that submissions never become public. There
+/// is deliberately NO `isPublic` / `isPublished` column: the schema offers no
+/// switch that could be flipped by accident or by a careless admin screen.
+///
+/// Public status tracking uses `trackingTokenHash`, never `reference`:
+///   * the citizen receives a high-entropy token once, at submission;
+///   * only its HMAC is stored, so a database read cannot recover it;
+///   * `reference` is a short human label for staff and is NOT sufficient to
+///     retrieve a submission, which is what prevents IDOR by enumeration.
+model Complaint {
+  id                String          @id @default(cuid())
+  kind              ComplaintKind
+  /// Staff-facing label, e.g. "PGD-2026-0001". Not a credential.
+  reference         String          @unique
+  /// HMAC of the citizen's tracking token. Never the token itself.
+  trackingTokenHash String          @unique
+  status            ComplaintStatus @default(RECEIVED)
+
+  reporterName  String
+  reporterPhone String
+  reporterEmail String?
+  padukuhanId   String?
+  categoryId    String?
+  /// The source caps the message at 1.000 characters; enforced in the column.
+  message       String   @db.VarChar(1000)
+
+  /// Internal handling notes. Never exposed on the public tracking view.
+  internalNotes String?
+  resolvedAt    DateTime?
+  closedAt      DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  padukuhan   Padukuhan?               @relation(fields: [padukuhanId], references: [id], onDelete: SetNull)
+  category    ComplaintCategory?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  attachments ComplaintAttachment[]
+  history     ComplaintStatusHistory[]
+
+  @@index([status, createdAt])
+  @@index([kind, status])
+  @@index([padukuhanId])
+  @@index([createdAt])
+  @@map("complaints")
+}
+
+/// Attachment to a citizen submission. Stored in the PRIVATE bucket only.
+///
+/// Separate from Media so a private attachment cannot be reached through the
+/// public media library. Cascades with its complaint: deleting a submission
+/// must not orphan citizen-supplied files.
+model ComplaintAttachment {
+  id          String   @id @default(cuid())
+  complaintId String
+  bucket      String
+  path        String
+  filename    String
+  mimeType    String
+  sizeBytes   Int
+  createdAt   DateTime @default(now())
+
+  complaint Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+
+  @@unique([bucket, path])
+  @@index([complaintId])
+  @@map("complaint_attachments")
+}
+
+/// Append-only status trail. No updatedAt: entries are never edited.
+model ComplaintStatusHistory {
+  id          String           @id @default(cuid())
+  complaintId String
+  fromStatus  ComplaintStatus?
+  toStatus    ComplaintStatus
+  note        String?
+  changedById String?
+  createdAt   DateTime         @default(now())
+
+  complaint Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+  changedBy User?     @relation(fields: [changedById], references: [id], onDelete: SetNull)
+
+  @@index([complaintId, createdAt])
+  @@map("complaint_status_history")
+}
+
+// ===========================================================================
+// Transparency — budget
+// ===========================================================================
+
+/// Distinguishes the several groupings the source publishes over one budget.
+///
+/// The source presents expenditure TWICE: as a four-line allocation and as the
+/// five-bidang Permendagri classification. They describe the same total, so
+/// they must not be summed together — hence the discriminator.
+enum BudgetLineKind {
+  REVENUE
+  EXPENDITURE_ALLOCATION
+  EXPENDITURE_BIDANG
+  FINANCING_RECEIPT
+  FINANCING_OUTLAY
+}
+
+/// APBKal for one fiscal year.
+model Budget {
+  id                String        @id @default(cuid())
+  fiscalYear        Int           @unique
+  totalRevenue      Decimal       @db.Decimal(18, 2)
+  totalExpenditure  Decimal       @db.Decimal(18, 2)
+  financingReceipts Decimal       @db.Decimal(18, 2)
+  financingOutlays  Decimal       @db.Decimal(18, 2)
+  netFinancing      Decimal       @db.Decimal(18, 2)
+  /// Source wording, e.g. "Anggaran Berimbang (Nol)".
+  balanceLabel      String?
+  /// Legal / procedural basis, verbatim.
+  basis             String?
+  status            ContentStatus @default(DRAFT)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  lines        BudgetLine[]
+  realizations BudgetRealization[]
+  cycleStages  BudgetCycleStage[]
+
+  @@index([status])
+  @@map("budgets")
+}
+
+/// One itemised budget row.
+///
+/// `amount` is NULL where the source published only a rounded figure. The
+/// five-bidang lines for Pemberdayaan ("Rp 391 Jt") and Penanggulangan
+/// ("Rp 117 Jt") are rounded, so storing them as exact Decimals would invent
+/// precision the source never gave. `amountLabel` preserves the source's own
+/// rendering, per the Phase 2 requirement to keep source terminology.
+model BudgetLine {
+  id          String         @id @default(cuid())
+  budgetId    String
+  kind        BudgetLineKind
+  label       String
+  amount      Decimal?       @db.Decimal(18, 2)
+  /// Source's own text where the figure is rounded, e.g. "Rp 391 Jt".
+  amountLabel String?
+  percentage  Decimal?       @db.Decimal(5, 2)
+  sortOrder   Int
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  budget Budget @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+
+  @@unique([budgetId, kind, label])
+  @@index([budgetId, kind])
+  @@map("budget_lines")
+}
+
+/// Periodic realisation figures (source p6).
+model BudgetRealization {
+  id                    String   @id @default(cuid())
+  budgetId              String
+  /// e.g. "Semester II".
+  period                String
+  physicalPercent       Decimal? @db.Decimal(5, 2)
+  physicalTargetPercent Decimal? @db.Decimal(5, 2)
+  physicalNote          String?
+  cashPercent           Decimal? @db.Decimal(5, 2)
+  /// Realisasi SP2D kas kalurahan.
+  cashAmount            Decimal? @db.Decimal(18, 2)
+  recordedAt            DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  budget Budget @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+
+  @@unique([budgetId, period])
+  @@map("budget_realizations")
+}
+
+/// The five accountability gates of the budget cycle (source p6). Stored
+/// rather than hardcoded so /transparansi renders from data like every other
+/// section.
+model BudgetCycleStage {
+  id          String   @id @default(cuid())
+  budgetId    String
+  stageNumber Int
+  name        String
+  description String
+  /// Source's own status wording, e.g. "Tuntas", "Sedang Berjalan".
+  statusLabel String
+  updatedAt   DateTime @updatedAt
+
+  budget Budget @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+
+  @@unique([budgetId, stageNumber])
+  @@map("budget_cycle_stages")
+}
+
+// ===========================================================================
+// Transparency — development projects
+// ===========================================================================
+
+enum ProjectStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+}
+
+model DevelopmentProject {
+  id                     String        @id @default(cuid())
+  /// Source identifier, e.g. "FIS-01/26".
+  code                   String        @unique
+  slug                   String        @unique
+  title                  String
+  description            String
+  fiscalYear             Int
+  /// Verbatim source location text, e.g. "Padukuhan Mangsel & Sompokan". Kept
+  /// alongside the padukuhan relation because one project sits at the Balai
+  /// Kalurahan, which is not a padukuhan.
+  locationLabel          String
+  budgetAmount           Decimal       @db.Decimal(18, 2)
+  /// Verbatim, e.g. "Dana Desa & Swadaya" — combinations rule out an enum.
+  fundingSourceLabel     String
+  status                 ProjectStatus
+  physicalProgress       Int           @default(0)
+  /// Never published by the source; nullable so it can be added later.
+  financialProgress      Int?
+  /// Source's own target wording, e.g. "Akhir Triwulan II".
+  targetLabel            String?
+  startDate              DateTime?     @db.Date
+  targetDate             DateTime?     @db.Date
+  /// Status footnote, e.g. "Telah Diperiksa BPKal".
+  note                   String?
+  coverMediaId           String?
+  publishStatus          ContentStatus @default(DRAFT)
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+
+  coverMedia Media?                     @relation(fields: [coverMediaId], references: [id], onDelete: SetNull)
+  padukuhan  ProjectPadukuhan[]
+  updates    DevelopmentProjectUpdate[]
+
+  @@index([fiscalYear, status])
+  @@index([publishStatus])
+  @@map("development_projects")
+}
+
+/// A project can span several padukuhan, and a padukuhan hosts many projects.
+model ProjectPadukuhan {
+  projectId   String
+  padukuhanId String
+
+  project   DevelopmentProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  padukuhan Padukuhan          @relation(fields: [padukuhanId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, padukuhanId])
+  @@index([padukuhanId])
+  @@map("project_padukuhan")
+}
+
+model DevelopmentProjectUpdate {
+  id               String   @id @default(cuid())
+  projectId        String
+  title            String
+  body             String?
+  physicalProgress Int?
+  recordedAt       DateTime @default(now())
+  createdById      String?
+  createdAt        DateTime @default(now())
+
+  project   DevelopmentProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy User?              @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([projectId, recordedAt])
+  @@map("development_project_updates")
+}
+
+// ===========================================================================
+// Transparency — document repository
+// ===========================================================================
+
+/// Closed set, each label verified in the source (p6).
+enum DocumentCategory {
+  APBKAL
+  RKPKAL
+  RPJMKAL
+  LPPKAL
+  PERKAL
+  LAKIP
+}
+
+/// A public document.
+///
+/// `sizeBytes` is NULL for every seeded row: SOURCE_DATA V05 records that the
+/// source lists six file sizes as an unmapped group, so none can be attributed
+/// to a specific document. `mediaId` is NULL because the files themselves do
+/// not exist (V04) — the repository lists what is published, and the UI must
+/// render "belum tersedia" rather than a broken download.
+model Document {
+  id          String           @id @default(cuid())
+  slug        String           @unique
+  title       String
+  category    DocumentCategory
+  /// Source's own category caption, e.g. "Perkal Kebudayaan DIY".
+  categoryLabel String?
+  year        Int?
+  description String?
+  /// Formal number, e.g. "04" with numberYear 2026.
+  number      String?
+  numberYear  Int?
+  fileType    String?
+  sizeBytes   Int?
+  mediaId     String?
+  publishedAt DateTime?        @db.Date
+  status      ContentStatus    @default(DRAFT)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  media Media? @relation(fields: [mediaId], references: [id], onDelete: SetNull)
+
+  @@index([category, year])
+  @@index([status])
+  @@map("documents")
+}
+
+// ===========================================================================
+// Local potential & UMKM
+// ===========================================================================
+
+model LocalPotentialCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  sortOrder   Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  potentials LocalPotential[]
+
+  @@map("local_potential_categories")
+}
+
+model LocalPotential {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  title       String
+  /// Short strapline used on the pillar cards.
+  headline    String?
+  description String
+  /// Supporting caption, e.g. "Hasil Panen Utama: Beras Sleman Unggul".
+  highlight   String?
+  categoryId  String
+  padukuhanId String?
+  status      ContentStatus @default(DRAFT)
+  sortOrder   Int
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  category  LocalPotentialCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  padukuhan Padukuhan?             @relation(fields: [padukuhanId], references: [id], onDelete: SetNull)
+
+  @@index([categoryId])
+  @@index([status])
+  @@map("local_potentials")
+}
+
+/// A UMKM in the kalurahan directory (source p8, p9).
+///
+/// Withheld and therefore NULL: `dailyCapacityLabel` (conflict C09 — the
+/// source states 150 kg/hari and 120+ kg/hari on different pages) and
+/// `whatsapp` (conflict C10 — the number printed is the kalurahan's own
+/// hotline, which would route citizen orders to the government line).
+model Umkm {
+  id                 String        @id @default(cuid())
+  slug               String        @unique
+  name               String
+  ownerName          String?
+  summary            String
+  description        String?
+  categoryLabel      String?
+  padukuhanId        String?
+  addressDetail      String?
+  foundedYear        Int?
+  hasNib             Boolean       @default(false)
+  pirtNumber         String?
+  whatsapp           String?
+  socialMedia        String?
+  dailyCapacityLabel String?
+  ratingValue        Decimal?      @db.Decimal(2, 1)
+  ratingCount        Int?
+  workerCount        Int?
+  operatingHours     String?
+  coverMediaId       String?
+  status             ContentStatus @default(DRAFT)
+  sortOrder          Int
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  padukuhan  Padukuhan?    @relation(fields: [padukuhanId], references: [id], onDelete: SetNull)
+  coverMedia Media?        @relation(fields: [coverMediaId], references: [id], onDelete: SetNull)
+  products   UmkmProduct[]
+
+  @@index([padukuhanId])
+  @@index([status])
+  @@map("umkm")
+}
+
+model UmkmProduct {
+  id           String   @id @default(cuid())
+  umkmId       String
+  name         String
+  description  String?
+  priceRupiah  Decimal? @db.Decimal(18, 2)
+  /// Source's own unit wording, e.g. "/ bks", "/ pouch".
+  priceUnit    String?
+  packaging    String?
+  /// e.g. "Best Seller", "Vacuum Pack".
+  badge        String?
+  sortOrder    Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  umkm Umkm @relation(fields: [umkmId], references: [id], onDelete: Cascade)
+
+  @@unique([umkmId, name])
+  @@map("umkm_products")
+}
+
+// ===========================================================================
+// Settings
+// ===========================================================================
+
+/// Typed key/value settings (FULL_BUILD §15).
+///
+/// Deliberately narrow: this is for genuine configuration such as the office
+/// address and service hours. Structured government data lives in its own
+/// tables — this is not an escape hatch for modelling.
+enum SettingType {
+  STRING
+  TEXT
+  NUMBER
+  BOOLEAN
+  URL
+  EMAIL
+  PHONE
+}
+
+model SiteSetting {
+  id          String      @id @default(cuid())
+  key         String      @unique
+  value       String
+  type        SettingType @default(STRING)
+  group       String
+  label       String
+  description String?
+  /// False for values that must never reach a public page.
+  isPublic    Boolean     @default(true)
+  updatedAt   DateTime    @updatedAt
+
+  @@index([group])
+  @@map("site_settings")
+}

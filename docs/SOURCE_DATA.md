@@ -88,6 +88,28 @@ padukuhan tables (conflict C05) are both unrecoverable from text.
 
 Attributed on p2 to the Rencana Pembangunan Jangka Menengah Kalurahan (RPJMKal).
 
+**Kata Sambutan Lurah** (p1 ✅) — verbatim. Heading:
+
+> Membangun Margomulyo yang Guyub, Mandiri, dan Berbudaya
+
+Quote, attributed to the Lurah:
+
+> "Selamat datang di website resmi Kalurahan Margomulyo. Website ini menjadi
+> media informasi, pelayanan dan keterbukaan Pemerintah Kalurahan Margomulyo
+> kepada masyarakat."
+
+Supporting paragraph:
+
+> Sebagai jantung sentra Kapanewon Seyegan, kami berkomitmen mengakselerasi
+> digitalisasi birokrasi tanpa melepaskan akar kebudayaan Sleman yang guyub
+> rukun. Seluruh data anggaran, layanan administrasi kependudukan, hingga
+> aspirasi warga kini terpadu dalam satu wadah digital terbuka.
+
+Recorded during the Phase 2 UI audit: this passage is plainly verified on page
+1 but had been omitted from this register, and its absence let invented text be
+published in the Lurah's voice. Any statement attributed to the kalurahan or
+its officials must come from this section verbatim.
+
 **10 Misi Pembangunan Kalurahan** (p2 ✅) — each with its short label:
 
 | # | Misi | Label |
