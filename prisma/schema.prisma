@@ -124,7 +124,7 @@ model User {
 ///   * No updatedAt — entries are never edited.
 model AuditLog {
   id         String   @id @default(cuid())
-  userId     String?
+  userId     String? @db.Uuid
   actorEmail String?
   actorName  String?
   action     String
@@ -427,7 +427,7 @@ model News {
   status       ContentStatus @default(DRAFT)
   /// Required whenever status = PUBLISHED; enforced by a CHECK constraint.
   publishedAt  DateTime?
-  authorId     String?
+  authorId     String? @db.Uuid
   /// Source byline, e.g. "Tim Liputan Margomulyo", when no user account maps.
   bylineLabel  String?
   coverMediaId String?
@@ -501,7 +501,7 @@ model Media {
   /// Null = not yet provided. Empty string = intentionally decorative.
   alt          String?
   caption      String?
-  uploadedById String?
+  uploadedById String? @db.Uuid
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -713,7 +713,7 @@ model ComplaintStatusHistory {
   fromStatus  ComplaintStatus?
   toStatus    ComplaintStatus
   note        String?
-  changedById String?
+  changedById String? @db.Uuid
   createdAt   DateTime         @default(now())
 
   complaint Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
@@ -901,7 +901,7 @@ model DevelopmentProjectUpdate {
   body             String?
   physicalProgress Int?
   recordedAt       DateTime @default(now())
-  createdById      String?
+  createdById      String? @db.Uuid
   createdAt        DateTime @default(now())
 
   project   DevelopmentProject @relation(fields: [projectId], references: [id], onDelete: Cascade)

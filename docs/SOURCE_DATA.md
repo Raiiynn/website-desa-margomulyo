@@ -136,7 +136,7 @@ with a one-paragraph definition in the source.
 ### 3.2 Geography
 
 | Field | Value | Source |
-|---|---|---|
+|---|---|---|     
 | Luas wilayah | 515,20 Ha | p1, p2, p8 ✅ |
 | Topografi | Kontur daratan datar, subur, iklim tropis | p2 ✅ |
 | Irigasi | Selokan Mataram / Selokan Van der Wijck | p2, p8 ✅ |

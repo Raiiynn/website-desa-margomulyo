@@ -24,7 +24,8 @@
     "db:studio": "node scripts/with-env.mjs prisma studio",
     "postinstall": "prisma generate",
     "gates": "npm run lint && npm run typecheck && npm run test && npm run build",
-    "db:status": "node scripts/with-env.mjs prisma migrate status"
+    "db:status": "node scripts/with-env.mjs prisma migrate status",
+    "db:verify:rls": "node scripts/with-env.mjs node scripts/verify-rls.mjs"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

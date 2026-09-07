@@ -81,7 +81,7 @@ CREATE TABLE "users" (
 -- CreateTable
 CREATE TABLE "audit_logs" (
     "id" TEXT NOT NULL,
-    "userId" TEXT,
+    "userId" UUID,
     "actorEmail" TEXT,
     "actorName" TEXT,
     "action" TEXT NOT NULL,
@@ -270,7 +270,7 @@ CREATE TABLE "news" (
     "categoryId" TEXT NOT NULL,
     "status" "ContentStatus" NOT NULL DEFAULT 'DRAFT',
     "publishedAt" TIMESTAMP(3),
-    "authorId" TEXT,
+    "authorId" UUID,
     "bylineLabel" TEXT,
     "coverMediaId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -324,7 +324,7 @@ CREATE TABLE "media" (
     "height" INTEGER,
     "alt" TEXT,
     "caption" TEXT,
-    "uploadedById" TEXT,
+    "uploadedById" UUID,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -448,7 +448,7 @@ CREATE TABLE "complaint_status_history" (
     "fromStatus" "ComplaintStatus",
     "toStatus" "ComplaintStatus" NOT NULL,
     "note" TEXT,
-    "changedById" TEXT,
+    "changedById" UUID,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "complaint_status_history_pkey" PRIMARY KEY ("id")
@@ -559,7 +559,7 @@ CREATE TABLE "development_project_updates" (
     "body" TEXT,
     "physicalProgress" INTEGER,
     "recordedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "createdById" TEXT,
+    "createdById" UUID,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "development_project_updates_pkey" PRIMARY KEY ("id")
