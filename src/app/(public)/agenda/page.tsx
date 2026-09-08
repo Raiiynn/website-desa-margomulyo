@@ -3,7 +3,8 @@ import type { Metadata } from 'next';
 import { Container } from '@/components/ui/Container';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Badge } from '@/components/ui/Badge';
-import { AGENDA, formatDateIndonesian } from '@/data/fixtures';
+import { formatDateIndonesian } from '@/lib/format';
+import { listUpcomingAgenda } from '@/server/queries/content';
 import { Calendar, MapPin } from '@/components/ui/Icons';
 
 export const metadata: Metadata = {
@@ -12,7 +13,12 @@ export const metadata: Metadata = {
     'Jadwal dan agenda kegiatan resmi Pemerintah Kalurahan Margomulyo, Seyegan, Sleman.',
 };
 
-export default function AgendaPage() {
+export const revalidate = 300;
+
+export default async function AgendaPage() {
+  // Agenda is time-relative: only items that have not finished yet.
+  const AGENDA = await listUpcomingAgenda(new Date());
+
   return (
     <div className="py-8 sm:py-12">
       <Container>

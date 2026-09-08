@@ -3,9 +3,12 @@ import Link from 'next/link';
 import { SITE_TITLE, SITE_SUBTITLE } from '@/lib/site';
 import { Container } from '@/components/ui/Container';
 import { MapPin, Phone, Mail, Clock, ArrowRight } from '@/components/ui/Icons';
-import { getSetting } from '@/data/fixtures';
+import { getPublicSettings } from '@/server/queries/profile';
+import { settingReader } from '@/lib/settings';
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const getSetting = settingReader(await getPublicSettings());
+
   const address = getSetting(
     'contact.address',
     'Jalan Mulia No. 1, Margomulyo, Seyegan, Sleman, D.I. Yogyakarta 55561'

@@ -4,17 +4,15 @@ import { Container } from '@/components/ui/Container';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Badge } from '@/components/ui/Badge';
+import { formatNumber } from '@/lib/format';
 import {
-  EDUCATION_LEVELS,
-  GOVERNANCE_PILLARS,
-  MISSIONS,
-  OCCUPATIONS,
-  RELIGIONS,
-  STATISTICS_SOURCE_LABEL,
-  TYPED_PADUKUHAN,
-  formatNumber,
-  getSetting,
-} from '@/data/fixtures';
+  getPublishedDemographics,
+  getPublicSettings,
+  listGovernancePillars,
+  listMissions,
+} from '@/server/queries/profile';
+import { listPadukuhan } from '@/server/queries/padukuhan';
+import { settingReader } from '@/lib/settings';
 
 export const metadata: Metadata = {
   title: 'Profil Desa',
@@ -22,7 +20,31 @@ export const metadata: Metadata = {
     'Profil lengkap Kalurahan Margomulyo, Kapanewon Seyegan, Kabupaten Sleman. Visi, misi, sejarah, demografi kependudukan, dan 13 padukuhan.',
 };
 
-export default function ProfilPage() {
+export const revalidate = 300;
+
+export default async function ProfilPage() {
+  const [demographics, settings, GOVERNANCE_PILLARS, MISSIONS, TYPED_PADUKUHAN] =
+    await Promise.all([
+      getPublishedDemographics(),
+      getPublicSettings(),
+      listGovernancePillars(),
+      listMissions(),
+      listPadukuhan(),
+    ]);
+
+  if (demographics === null) {
+    // The seed publishes exactly one snapshot. Its absence is a data fault, not
+    // an empty state to render around: this page is largely statistics.
+    throw new Error(
+      'No published demographic snapshot found. Expected one seeded row (prisma/seed-data/village.ts).',
+    );
+  }
+
+  const getSetting = settingReader(settings);
+  const RELIGIONS = demographics.religions;
+  const EDUCATION_LEVELS = demographics.educations;
+  const OCCUPATIONS = demographics.occupations;
+  const STATISTICS_SOURCE_LABEL = demographics.sourceLabel;
   const vision = getSetting(
     'village.vision',
     'Menciptakan Tata Kelola Pemerintahan Yang Jujur, Amanah dan Transparan Dalam Rangka Mewujudkan Kalurahan Margomulyo Yang Adil, Merata dan Sejahtera.'

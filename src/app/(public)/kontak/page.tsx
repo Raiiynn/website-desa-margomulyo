@@ -4,7 +4,9 @@ import { Container } from '@/components/ui/Container';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Badge } from '@/components/ui/Badge';
 import { ContactMessageForm } from '@/components/forms/ContactMessageForm';
-import { getSetting } from '@/data/fixtures';
+import { getPublicSettings } from '@/server/queries/profile';
+import { listPadukuhan } from '@/server/queries/padukuhan';
+import { settingReader } from '@/lib/settings';
 import { MapPin, Phone, Mail, Clock } from '@/components/ui/Icons';
 
 export const metadata: Metadata = {
@@ -13,7 +15,15 @@ export const metadata: Metadata = {
     'Alamat kantor, nomor telepon, WhatsApp, dan jam pelayanan resmi Pemerintah Kalurahan Margomulyo, Kapanewon Seyegan, Sleman.',
 };
 
-export default function KontakPage() {
+export const revalidate = 300;
+
+export default async function KontakPage() {
+  const [settings, padukuhan] = await Promise.all([
+    getPublicSettings(),
+    listPadukuhan(),
+  ]);
+  const getSetting = settingReader(settings);
+
   const address = getSetting(
     'contact.address',
     'Jalan Mulia No. 1, Margomulyo, Seyegan, Sleman, D.I. Yogyakarta 55561'
@@ -161,7 +171,7 @@ export default function KontakPage() {
               kesekretariatan kalurahan.
             </p>
 
-            <ContactMessageForm />
+            <ContactMessageForm PADUKUHAN={padukuhan} />
           </div>
         </div>
       </Container>

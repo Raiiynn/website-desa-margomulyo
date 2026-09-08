@@ -5,15 +5,12 @@ import { Container } from '@/components/ui/Container';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Badge } from '@/components/ui/Badge';
+import { formatCompactRupiah, formatRupiah } from '@/lib/format';
 import {
-  BUDGET,
-  BUDGET_CYCLE_STAGES,
-  BUDGET_REALIZATION,
-  DEVELOPMENT_PROJECTS,
-  DOCUMENTS,
-  formatCompactRupiah,
-  formatRupiah,
-} from '@/data/fixtures';
+  getPublishedBudget,
+  listPublishedDocuments,
+  listPublishedProjects,
+} from '@/server/queries/transparency';
 import {
   ArrowRight,
 } from '@/components/ui/Icons';
@@ -24,7 +21,31 @@ export const metadata: Metadata = {
     'Portal keterbukaan informasi publik dan akuntabilitas keuangan APBKal 2026 Pemerintah Kalurahan Margomulyo.',
 };
 
-export default function TransparansiPage() {
+export const revalidate = 300;
+
+/** The fiscal year this portal publishes. SOURCE_DATA V13: only 2026 exists. */
+const FISCAL_YEAR = 2026;
+
+export default async function TransparansiPage() {
+  const [BUDGET, DEVELOPMENT_PROJECTS, DOCUMENTS] = await Promise.all([
+    getPublishedBudget(FISCAL_YEAR),
+    listPublishedProjects(),
+    listPublishedDocuments(),
+  ]);
+
+  if (BUDGET === null) {
+    throw new Error(
+      `No published APBKal for ${FISCAL_YEAR}. Expected one seeded budget.`,
+    );
+  }
+
+  const BUDGET_CYCLE_STAGES = BUDGET.cycleStages;
+  // The source publishes one realisation period; the model permits many.
+  const BUDGET_REALIZATION = BUDGET.realizations[0];
+  if (BUDGET_REALIZATION === undefined) {
+    throw new Error(`APBKal ${FISCAL_YEAR} has no realisation row.`);
+  }
+
   return (
     <div className="py-8 sm:py-12">
       <Container>
@@ -145,7 +166,7 @@ export default function TransparansiPage() {
           <SectionHeader
             eyebrow="Tahun Anggaran 2026"
             title="Ringkasan Postur Keuangan Desa"
-            description={BUDGET.basis}
+            {...(BUDGET.basis === null ? {} : { description: BUDGET.basis })}
             linkHref="/transparansi/apbkal"
             linkLabel="Lihat Seluruh Tabel Rincian"
           />

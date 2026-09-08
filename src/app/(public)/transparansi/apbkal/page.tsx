@@ -4,16 +4,8 @@ import { Container } from '@/components/ui/Container';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Badge } from '@/components/ui/Badge';
-import {
-  BUDGET,
-  BUDGET_EXPENDITURE_ALLOCATION_LINES,
-  BUDGET_EXPENDITURE_BIDANG_LINES,
-  BUDGET_FINANCING_LINES,
-  BUDGET_REALIZATION,
-  BUDGET_REVENUE_LINES,
-  formatCompactRupiah,
-  formatRupiah,
-} from '@/data/fixtures';
+import { formatCompactRupiah, formatRupiah } from '@/lib/format';
+import { getPublishedBudget } from '@/server/queries/transparency';
 
 export const metadata: Metadata = {
   title: 'Rincian APBKal 2026',
@@ -21,7 +13,25 @@ export const metadata: Metadata = {
     'Rincian lengkap Anggaran Pendapatan dan Belanja Kalurahan (APBKal) Margomulyo Tahun Anggaran 2026.',
 };
 
-export default function APBKalDetailPage() {
+export const revalidate = 300;
+
+const FISCAL_YEAR = 2026;
+
+export default async function APBKalDetailPage() {
+  const BUDGET = await getPublishedBudget(FISCAL_YEAR);
+  if (BUDGET === null) {
+    throw new Error(`No published APBKal for ${FISCAL_YEAR}.`);
+  }
+
+  const BUDGET_REVENUE_LINES = BUDGET.revenue;
+  const BUDGET_EXPENDITURE_ALLOCATION_LINES = BUDGET.expenditureByAllocation;
+  const BUDGET_EXPENDITURE_BIDANG_LINES = BUDGET.expenditureByBidang;
+  const BUDGET_FINANCING_LINES = BUDGET.financing;
+  const BUDGET_REALIZATION = BUDGET.realizations[0];
+  if (BUDGET_REALIZATION === undefined) {
+    throw new Error(`APBKal ${FISCAL_YEAR} has no realisation row.`);
+  }
+
   return (
     <div className="py-8 sm:py-12">
       <Container>

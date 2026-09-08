@@ -5,13 +5,20 @@ import Link from 'next/link';
 import { Container } from '@/components/ui/Container';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Badge } from '@/components/ui/Badge';
-import { NEWS, formatDateIndonesian } from '@/data/fixtures';
+import { formatDateIndonesian } from '@/lib/format';
+import {
+  getPublishedNewsBySlug,
+  listPublishedNews,
+} from '@/server/queries/content';
 import { Calendar, CheckCircle, ShieldCheck } from '@/components/ui/Icons';
 
+export const revalidate = 300;
+
 export async function generateStaticParams() {
-  return NEWS.map((article) => ({
-    slug: article.slug,
-  }));
+  // Published only. This previously mapped every article including DRAFT,
+  // which gave the two headlines withheld under SOURCE_DATA V11 a public URL.
+  const { items } = await listPublishedNews({ pageSize: 50 });
+  return items.map((article) => ({ slug: article.slug }));
 }
 
 export async function generateMetadata({
@@ -20,7 +27,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const article = NEWS.find((n) => n.slug === slug);
+  const article = await getPublishedNewsBySlug(slug);
   if (!article) return { title: 'Warta Tidak Ditemukan' };
 
   return {
@@ -35,16 +42,22 @@ export default async function BeritaDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const article = NEWS.find((n) => n.slug === slug);
+  const detail = await getPublishedNewsBySlug(slug);
 
-  if (!article) {
+  // Unpublished and non-existent are the same answer to the public: a draft
+  // must not be distinguishable from a slug that was never used.
+  if (!detail) {
     notFound();
   }
 
-  // Related articles
-  const otherArticles = NEWS.filter(
-    (n) => n.slug !== slug && n.status === 'PUBLISHED'
-  ).slice(0, 3);
+  // categorySlug is flattened so the existing markup is untouched.
+  const article = { ...detail, categorySlug: detail.category.slug };
+
+  const { items } = await listPublishedNews({ pageSize: 4 });
+  const otherArticles = items
+    .filter((item) => item.slug !== slug)
+    .slice(0, 3)
+    .map((item) => ({ ...item, categorySlug: item.category.slug }));
 
   return (
     <div className="py-8 sm:py-12">

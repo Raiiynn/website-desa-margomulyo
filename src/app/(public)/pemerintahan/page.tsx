@@ -5,10 +5,10 @@ import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Badge } from '@/components/ui/Badge';
 import {
-  INSTITUTIONS,
-  TYPED_LEADERSHIP_TERMS,
-  OFFICIALS,
-} from '@/data/fixtures';
+  listActiveOfficials,
+  listInstitutions,
+  listLeadershipTerms,
+} from '@/server/queries/profile';
 import { ShieldCheck, CheckCircle } from '@/components/ui/Icons';
 
 export const metadata: Metadata = {
@@ -17,7 +17,15 @@ export const metadata: Metadata = {
     'Struktur organisasi Pamong Kalurahan Margomulyo, Badan Permusyawaratan Kalurahan (BPKal), Lembaga Kemasyarakatan, serta garis sejarah kepemimpinan.',
 };
 
-export default function PemerintahanPage() {
+export const revalidate = 300;
+
+export default async function PemerintahanPage() {
+  const [OFFICIALS, INSTITUTIONS, TYPED_LEADERSHIP_TERMS] = await Promise.all([
+    listActiveOfficials(),
+    listInstitutions(),
+    listLeadershipTerms(),
+  ]);
+
   return (
     <div className="py-8 sm:py-12">
       <Container>

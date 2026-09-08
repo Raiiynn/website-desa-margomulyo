@@ -5,10 +5,10 @@ import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Badge } from '@/components/ui/Badge';
 import {
-  LOCAL_POTENTIALS,
-  PADUKUHAN,
-  UMKM,
-} from '@/data/fixtures';
+  listPublishedPotentials,
+  listPublishedUmkm,
+} from '@/server/queries/potential';
+import { listPadukuhan } from '@/server/queries/padukuhan';
 import { CheckCircle, ShieldCheck, MapPin, Clock } from '@/components/ui/Icons';
 
 export const metadata: Metadata = {
@@ -17,7 +17,21 @@ export const metadata: Metadata = {
     'Eksplorasi potensi pertanian padi irigasi Selokan Van Der Wijck, sentra UMKM Tempe Mbok Sri, kesenian Jathilan Jamblangan, dan budidaya perikanan Margomulyo.',
 };
 
-export default function PotensiPage() {
+export const revalidate = 300;
+
+export default async function PotensiPage() {
+  const [potentials, UMKM, PADUKUHAN] = await Promise.all([
+    listPublishedPotentials(),
+    listPublishedUmkm(),
+    listPadukuhan(),
+  ]);
+
+  // categorySlug is flattened so the existing markup is untouched.
+  const LOCAL_POTENTIALS = potentials.map((item) => ({
+    ...item,
+    categorySlug: item.category.slug,
+  }));
+
   const mbokSri = UMKM[0];
 
   return (

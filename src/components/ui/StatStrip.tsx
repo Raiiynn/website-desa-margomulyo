@@ -1,11 +1,16 @@
 import React from 'react';
-import {
-  DEMOGRAPHICS,
-  STATISTICS_SOURCE_LABEL,
-  formatNumber,
-} from '@/data/fixtures';
+import { formatNumber } from '@/lib/format';
+import { getPublishedDemographics } from '@/server/queries/profile';
 
-export function StatStrip({ className = '' }: { className?: string }) {
+export async function StatStrip({ className = '' }: { className?: string }) {
+  const DEMOGRAPHICS = await getPublishedDemographics();
+  if (DEMOGRAPHICS === null) {
+    // One published snapshot is seeded. Its absence is a data fault, and
+    // this strip is nothing but statistics, so it must not render blanks.
+    throw new Error('No published demographic snapshot found.');
+  }
+  const STATISTICS_SOURCE_LABEL = DEMOGRAPHICS.sourceLabel;
+
   const stats = [
     {
       label: 'Jumlah Penduduk',

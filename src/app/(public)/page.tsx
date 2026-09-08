@@ -1,19 +1,19 @@
 import React from 'react';
 import Link from 'next/link';
 import { SITE_SUBTITLE } from '@/lib/site';
+import { formatDateIndonesian, formatRupiah } from '@/lib/format';
 import {
-  BUDGET,
-  BUDGET_REALIZATION,
-  DEMOGRAPHICS,
-  DOCUMENTS,
-  GOVERNANCE_PILLARS,
-  LOCAL_POTENTIALS,
-  NEWS,
-  SERVICES,
-  formatDateIndonesian,
-  formatRupiah,
-  getSetting,
-} from '@/data/fixtures';
+  getPublicSettings,
+  getPublishedDemographics,
+  listGovernancePillars,
+} from '@/server/queries/profile';
+import { listPublishedNews, listPublishedServices } from '@/server/queries/content';
+import {
+  getPublishedBudget,
+  listPublishedDocuments,
+} from '@/server/queries/transparency';
+import { listPublishedPotentials } from '@/server/queries/potential';
+import { settingReader } from '@/lib/settings';
 import { Container } from '@/components/ui/Container';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { StatStrip } from '@/components/ui/StatStrip';
@@ -27,7 +27,45 @@ import {
   Building,
 } from '@/components/ui/Icons';
 
-export default function HomePage() {
+export const revalidate = 300;
+
+const FISCAL_YEAR = 2026;
+
+export default async function HomePage() {
+  const [
+    settings,
+    DEMOGRAPHICS,
+    GOVERNANCE_PILLARS,
+    newsPage,
+    SERVICES,
+    BUDGET,
+    DOCUMENTS,
+    LOCAL_POTENTIALS,
+  ] = await Promise.all([
+    getPublicSettings(),
+    getPublishedDemographics(),
+    listGovernancePillars(),
+    // Featured card plus four compact items (pattern P04).
+    listPublishedNews({ pageSize: 5 }),
+    listPublishedServices(),
+    getPublishedBudget(FISCAL_YEAR),
+    listPublishedDocuments(),
+    listPublishedPotentials(),
+  ]);
+
+  if (DEMOGRAPHICS === null) {
+    throw new Error('No published demographic snapshot found.');
+  }
+  if (BUDGET === null) {
+    throw new Error(`No published APBKal for ${FISCAL_YEAR}.`);
+  }
+
+  const getSetting = settingReader(settings);
+  const BUDGET_REALIZATION = BUDGET.realizations[0];
+  if (BUDGET_REALIZATION === undefined) {
+    throw new Error(`APBKal ${FISCAL_YEAR} has no realisation row.`);
+  }
+
   // Reference p1, recorded in SOURCE_DATA §3.2. The source's fourth card
   // ("86 RT") is withheld under conflict C05, so this ships as three.
   const TERRITORY_CARDS = [
@@ -49,7 +87,7 @@ export default function HomePage() {
   ];
 
   // Published news sorted by date
-  const publishedNews = NEWS.filter((n) => n.status === 'PUBLISHED');
+  const publishedNews = newsPage.items;
   const featuredArticle = publishedNews[0];
   const secondaryArticles = publishedNews.slice(1, 5);
 
