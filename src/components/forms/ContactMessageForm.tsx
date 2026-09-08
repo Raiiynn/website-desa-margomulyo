@@ -2,10 +2,19 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/Button';
-import { PADUKUHAN } from '@/data/fixtures';
+
+export interface PadukuhanOption {
+  number: number;
+  name: string;
+  slug: string;
+}
 import { ShieldCheck } from '@/components/ui/Icons';
 
-export function ContactMessageForm() {
+export function ContactMessageForm({
+  PADUKUHAN,
+}: {
+  PADUKUHAN: PadukuhanOption[];
+}) {
   return (
     <form className="space-y-4" onSubmit={(event) => event.preventDefault()}>
       <div>
