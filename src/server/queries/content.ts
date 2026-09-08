@@ -33,6 +33,8 @@ export interface NewsListItem {
   slug: string;
   title: string;
   excerpt: string;
+  /** Shown on the featured card, e.g. "Tim Liputan Margomulyo". */
+  bylineLabel: string | null;
   category: { name: string; slug: string };
   publishedAt: string | null;
   readingMinutes: number;
@@ -80,6 +82,7 @@ export async function listPublishedNews(options?: {
       slug: row.slug,
       title: row.title,
       excerpt: row.excerpt,
+      bylineLabel: row.bylineLabel,
       category: row.category,
       publishedAt: optionalDateToIso(row.publishedAt),
       readingMinutes: readingMinutes(row.body),
@@ -93,7 +96,6 @@ export async function listPublishedNews(options?: {
 
 export interface NewsDetail extends NewsListItem {
   body: string;
-  bylineLabel: string | null;
 }
 
 export async function getPublishedNewsBySlug(
@@ -209,8 +211,26 @@ export async function listPublishedServices(
 export async function getPublishedServiceBySlug(
   slug: string,
 ): Promise<ServiceListItem | null> {
-  const rows = await listPublishedServices();
-  return rows.find((row) => row.slug === slug) ?? null;
+  const row = await db.service.findFirst({
+    where: { slug, status: ContentStatus.PUBLISHED },
+    include: { category: { select: { name: true, slug: true } } },
+  });
+  if (row === null) return null;
+
+  return {
+    slug: row.slug,
+    code: row.code,
+    badge: row.badge,
+    name: row.name,
+    description: row.description,
+    requirements: row.requirements,
+    duration: row.duration,
+    output: row.output,
+    method: row.method,
+    costRupiah: row.costRupiah.toFixed(2),
+    procedure: row.procedure,
+    category: row.category,
+  };
 }
 
 export async function listServiceCategories(): Promise<

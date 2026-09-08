@@ -50,6 +50,13 @@ export interface BudgetDto {
   expenditureByAllocation: BudgetLineDto[];
   /** The five-bidang Permendagri classification of the same total. */
   expenditureByBidang: BudgetLineDto[];
+  /**
+   * Financing receipts and outlays (SiLPA carried forward, BUMKal equity).
+   * Kept separate from revenue and expenditure: financing is the balancing
+   * section of the APBKal, and folding it into either total would break the
+   * arithmetic identity the schema enforces with a CHECK constraint.
+   */
+  financing: BudgetLineDto[];
   realizations: {
     period: string;
     physicalPercent: string | null;
@@ -101,6 +108,7 @@ export async function getPublishedBudget(
     revenue: pick('REVENUE'),
     expenditureByAllocation: pick('EXPENDITURE_ALLOCATION'),
     expenditureByBidang: pick('EXPENDITURE_BIDANG'),
+    financing: [...pick('FINANCING_RECEIPT'), ...pick('FINANCING_OUTLAY')],
     realizations: budget.realizations.map((r) => ({
       period: r.period,
       physicalPercent: optionalDecimalToString(r.physicalPercent),

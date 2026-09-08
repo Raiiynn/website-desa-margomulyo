@@ -1,5 +1,7 @@
 import 'server-only';
 
+import { cache } from 'react';
+
 import { db } from '@/server/db';
 import { dateToIsoDay, optionalDecimalToString } from '@/server/serialize';
 
@@ -47,52 +49,54 @@ export interface DemographicsDto {
   occupations: { occupation: string; people: number; rank: number }[];
 }
 
-export async function getPublishedDemographics(): Promise<DemographicsDto | null> {
-  const snapshot = await db.demographicSnapshot.findFirst({
-    where: { isPublished: true },
-    orderBy: { referenceDate: 'desc' },
-    include: {
-      religions: { orderBy: { sortOrder: 'asc' } },
-      educations: { orderBy: { sortOrder: 'asc' } },
-      occupations: { orderBy: { rank: 'asc' } },
-    },
-  });
-  if (snapshot === null) return null;
+export const getPublishedDemographics = cache(
+  async (): Promise<DemographicsDto | null> => {
+    const snapshot = await db.demographicSnapshot.findFirst({
+      where: { isPublished: true },
+      orderBy: { referenceDate: 'desc' },
+      include: {
+        religions: { orderBy: { sortOrder: 'asc' } },
+        educations: { orderBy: { sortOrder: 'asc' } },
+        occupations: { orderBy: { rank: 'asc' } },
+      },
+    });
+    if (snapshot === null) return null;
 
-  return {
-    referenceDate: dateToIsoDay(snapshot.referenceDate),
-    sourceLabel: snapshot.sourceLabel,
-    totalPopulation: snapshot.totalPopulation,
-    malePopulation: snapshot.malePopulation,
-    femalePopulation: snapshot.femalePopulation,
-    households: snapshot.households,
-    householdsMaleHead: snapshot.householdsMaleHead,
-    householdsFemaleHead: snapshot.householdsFemaleHead,
-    vulnerablePeople: snapshot.vulnerablePeople,
-    vulnerablePercent: optionalDecimalToString(snapshot.vulnerablePercent),
-    completionPercent: optionalDecimalToString(snapshot.completionPercent),
-    areaHectares: snapshot.areaHectares.toFixed(2),
-    padukuhanCount: snapshot.padukuhanCount,
-    rwCount: snapshot.rwCount,
-    rtCount: snapshot.rtCount,
-    religions: snapshot.religions.map((r) => ({
-      religion: r.religion,
-      people: r.people,
-      percentage: optionalDecimalToString(r.percentage),
-    })),
-    educations: snapshot.educations.map((e) => ({
-      level: e.level,
-      people: e.people,
-      percentage: optionalDecimalToString(e.percentage),
-      isTertiary: e.isTertiary,
-    })),
-    occupations: snapshot.occupations.map((o) => ({
-      occupation: o.occupation,
-      people: o.people,
-      rank: o.rank,
-    })),
-  };
-}
+    return {
+      referenceDate: dateToIsoDay(snapshot.referenceDate),
+      sourceLabel: snapshot.sourceLabel,
+      totalPopulation: snapshot.totalPopulation,
+      malePopulation: snapshot.malePopulation,
+      femalePopulation: snapshot.femalePopulation,
+      households: snapshot.households,
+      householdsMaleHead: snapshot.householdsMaleHead,
+      householdsFemaleHead: snapshot.householdsFemaleHead,
+      vulnerablePeople: snapshot.vulnerablePeople,
+      vulnerablePercent: optionalDecimalToString(snapshot.vulnerablePercent),
+      completionPercent: optionalDecimalToString(snapshot.completionPercent),
+      areaHectares: snapshot.areaHectares.toFixed(2),
+      padukuhanCount: snapshot.padukuhanCount,
+      rwCount: snapshot.rwCount,
+      rtCount: snapshot.rtCount,
+      religions: snapshot.religions.map((r) => ({
+        religion: r.religion,
+        people: r.people,
+        percentage: optionalDecimalToString(r.percentage),
+      })),
+      educations: snapshot.educations.map((e) => ({
+        level: e.level,
+        people: e.people,
+        percentage: optionalDecimalToString(e.percentage),
+        isTertiary: e.isTertiary,
+      })),
+      occupations: snapshot.occupations.map((o) => ({
+        occupation: o.occupation,
+        people: o.people,
+        rank: o.rank,
+      })),
+    };
+  },
+);
 
 export interface OfficialDto {
   kind: string;
@@ -129,6 +133,7 @@ export async function listActiveOfficials(): Promise<OfficialDto[]> {
 
 export async function listLeadershipTerms(): Promise<
   {
+    sortOrder: number;
     name: string;
     description: string | null;
     startYear: number;
@@ -136,9 +141,13 @@ export async function listLeadershipTerms(): Promise<
     isIncumbent: boolean;
   }[]
 > {
+  // sortOrder is selected because it is the only stable unique key: the same
+  // Lurah appears three times in the timeline (1996-2004, 2004-2009,
+  // 2015-2021), so the name alone cannot identify a term.
   return db.leadershipTerm.findMany({
     orderBy: { sortOrder: 'asc' },
     select: {
+      sortOrder: true,
       name: true,
       description: true,
       startYear: true,
@@ -182,10 +191,12 @@ export async function listGovernancePillars(): Promise<
 }
 
 /** Public settings only. `isPublic = false` rows never leave the server. */
-export async function getPublicSettings(): Promise<Record<string, string>> {
-  const rows = await db.siteSetting.findMany({
-    where: { isPublic: true },
-    select: { key: true, value: true },
-  });
-  return Object.fromEntries(rows.map((row) => [row.key, row.value]));
-}
+export const getPublicSettings = cache(
+  async (): Promise<Record<string, string>> => {
+    const rows = await db.siteSetting.findMany({
+      where: { isPublic: true },
+      select: { key: true, value: true },
+    });
+    return Object.fromEntries(rows.map((row) => [row.key, row.value]));
+  },
+);
