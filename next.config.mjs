@@ -2,6 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
 
+  // TEMPORARY probe: single worker to lower peak memory.
+  experimental: { cpus: 1, workerThreads: false },
+
   // Fail the build on type or lint errors rather than shipping them.
   // Next defaults to failing on type errors; being explicit documents intent.
   typescript: { ignoreBuildErrors: false },
