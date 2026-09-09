@@ -71,10 +71,13 @@ export async function updateNews(id: string, formData: FormData) {
       categoryId,
       status,
       bylineLabel: bylineLabel || null,
-      publishedAt:
-        status === 'PUBLISHED' && existing?.publishedAt === null
-          ? new Date()
-          : undefined,
+      // Omit the key entirely (rather than set it to `undefined`) when the
+      // article isn't newly publishing, so Prisma leaves the existing
+      // publishedAt untouched instead of the update carrying an
+      // unassignable `undefined` under exactOptionalPropertyTypes.
+      ...(status === 'PUBLISHED' && existing?.publishedAt === null
+        ? { publishedAt: new Date() }
+        : {}),
     },
   });
 
@@ -448,8 +451,19 @@ export async function updateComplaintStatus(
       where: { id },
       data: {
         status: newStatus,
-        resolvedAt: newStatus === 'RESOLVED' ? new Date() : undefined,
-        closedAt: newStatus === 'CLOSED' ? new Date() : undefined,
+        // The schema CHECK constraints require resolvedAt/closedAt to be
+        // NULL unless the status justifies them (complaint_resolved_at_/
+        // complaint_closed_at_requires_status). Moving a complaint back to
+        // an earlier status — e.g. reopening a mistakenly-resolved one —
+        // must clear these, not merely leave the previous values in place,
+        // or the update violates the constraint. Preserve the original
+        // timestamp rather than overwriting it if already set.
+        resolvedAt:
+          newStatus === 'RESOLVED' || newStatus === 'CLOSED'
+            ? (complaint.resolvedAt ?? new Date())
+            : null,
+        closedAt:
+          newStatus === 'CLOSED' ? (complaint.closedAt ?? new Date()) : null,
       },
     }),
     db.complaintStatusHistory.create({

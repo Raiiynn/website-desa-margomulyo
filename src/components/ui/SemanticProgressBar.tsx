@@ -53,7 +53,7 @@ export function SemanticProgressBar({
         />
       </div>
 
-      {/* Contextual status note */}
+      {}
       {(targetPercentage !== undefined || statusNote) && (
         <div className="mt-3 flex items-center justify-between flex-wrap gap-2 text-xs text-text-muted">
           {targetPercentage !== undefined && (

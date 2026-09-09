@@ -63,7 +63,7 @@ export function EditDocumentForm({ document: doc }: { document: DocumentData }) 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           <AdminSelectField label="Kategori" name="category" required options={CATEGORY_OPTIONS} defaultValue={doc.category} />
           <AdminFormField label="Label Kategori" name="categoryLabel" defaultValue={doc.categoryLabel ?? ''} />
-          <AdminFormField label="Tahun" name="year" type="number" defaultValue={doc.year ?? undefined} />
+          <AdminFormField label="Tahun" name="year" type="number" defaultValue={doc.year ?? ''} />
         </div>
 
         <AdminTextAreaField label="Deskripsi" name="description" defaultValue={doc.description ?? ''} rows={3} />

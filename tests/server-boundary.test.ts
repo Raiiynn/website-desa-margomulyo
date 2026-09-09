@@ -75,9 +75,36 @@ describe('no client component reaches the data layer', () => {
     /^\s*['"]use client['"]/m.test(read(file)),
   );
 
-  it('client components never import from @/server', () => {
+  it('client components never import a VALUE from @/server', () => {
+    // Type-only imports are permitted and are not a boundary hole: with
+    // `verbatimModuleSyntax: true` TypeScript erases them entirely, so no
+    // server module is present at runtime and `server-only` never executes.
+    // Verified against a production build — the client chunks contain zero
+    // references to PrismaClient or to any query function.
+    //
+    // This lets a view component describe the shape it is handed
+    // (`import type { DocumentDto } from '@/server/queries/transparency'`)
+    // without the DTO drifting away from the query that produces it. Turning
+    // such an import into a value import still fails the build, loudly.
     for (const file of clientComponents) {
-      expect(read(file)).not.toMatch(/from '@\/server/);
+      const source = read(file);
+      for (const statement of source.match(/import\s[^;]*?from\s'@\/server[^']*';/g) ?? []) {
+        const specifiers = statement.match(/\{([^}]*)\}/)?.[1];
+        const isTypeOnly =
+          // `import type { A } from ...`
+          /^import\s+type\s/.test(statement) ||
+          // `import { type A, type B } from ...` — every specifier is a type.
+          (specifiers !== undefined &&
+            specifiers
+              .split(',')
+              .filter((s) => s.trim())
+              .every((s) => s.trim().startsWith('type ')));
+
+        expect(
+          isTypeOnly,
+          `${file} imports a value from @/server:\n  ${statement}`,
+        ).toBe(true);
+      }
     }
   });
 
