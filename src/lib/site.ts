@@ -96,6 +96,12 @@ export const ADMIN_BASE_PATH = '/admin' as const;
  * configured environment; production must set NEXT_PUBLIC_SITE_URL.
  */
 export function getSiteUrl(): string {
-  const url = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+  // `||`, not `??`: an unset env var and an empty string both mean "no site
+  // URL configured" here, and a blank string is never a usable URL. Vercel
+  // deploys have shipped `NEXT_PUBLIC_SITE_URL=""` when the variable exists
+  // in project settings with no value set, which `??` would let through
+  // unchanged and `new URL('')` in layout.tsx then rejects with
+  // "Invalid URL" — failing the entire build during page-data collection.
+  const url = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
   return url.replace(/\/$/, '');
 }
