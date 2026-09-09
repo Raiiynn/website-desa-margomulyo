@@ -13,24 +13,33 @@ export const STATISTICS_SOURCE_LABEL =
 
 export const STATISTICS_REFERENCE_DATE = '2026-09-01';
 
-/** SOURCE_DATA §3.5. Order and names agree across source pages 2, 3 and 8. */
+/**
+ * SOURCE_DATA §3.5. Order and names agree across source pages 2, 3 and 8.
+ *
+ * `dukuhName` is NOT a Padukuhan column — it is seed-time metadata read by
+ * `seedGovernment()` to name the corresponding DUKUH row in
+ * `government_officials`. Sourced from the second §3.4 source (kalurahan
+ * official ID cards, 28 Agustus 2026). `null` means still unverified — Kamal
+ * Kulon and Jingin were not in that batch (V01, narrowed).
+ */
 export const PADUKUHAN = [
-  { number: 1, name: 'Sawahan', slug: 'sawahan', potentialSummary: 'Sentra pertanian padi sawah utama dan lumbung pangan desa dengan hamparan irigasi lancar.' },
-  { number: 2, name: 'Jumeneng', slug: 'jumeneng', potentialSummary: 'Pertanian agrikultur padi berkelanjutan dan pengembangan perikanan kolam air tawar.' },
-  { number: 3, name: 'Gerjen', slug: 'gerjen', potentialSummary: 'UMKM pengrajin aktif, perdagangan warung sembako rakyat, dan jasa perbengkelan lokal.' },
-  { number: 4, name: 'Ngemplak', slug: 'ngemplak', potentialSummary: 'Pertanian sawah terpadu, gudang lumbung pangan desa, dan penampungan hasil bumi.' },
-  { number: 5, name: 'Kamal Kulon', slug: 'kamal-kulon', potentialSummary: 'Budidaya holtikultura sayuran pekarangan, cabai rawit, dan perikanan kolam terpal.' },
-  { number: 6, name: 'Sompokan', slug: 'sompokan', potentialSummary: 'Pertanian sawah produktif dan paguyuban pelestari kesenian tradisional karawitan.' },
-  { number: 7, name: 'Kregolan', slug: 'kregolan', potentialSummary: 'Sentra kelompok ternak kambing gibas/etawa dan aneka produksi olahan camilan kering.' },
-  { number: 8, name: 'Mangsel', slug: 'mangsel', potentialSummary: 'Potensi eduwisata perdesaan terpadu: kebun holtikultura, tempe rumahan, dan peternakan.' },
-  { number: 9, name: 'Daplokan', slug: 'daplokan', potentialSummary: 'Pertanian padi sawah subur dan berkembangnya aneka industri makanan olahan rumahan.' },
-  { number: 10, name: 'Kasuran', slug: 'kasuran', potentialSummary: 'Pengrajin lokal anyaman bambu, perkakas desa, dan komoditas tanaman pangan palawija.' },
-  { number: 11, name: 'Mriyan', slug: 'mriyan', potentialSummary: 'Paguyuban kebudayaan warga yang aktif, tradisi gotong royong, dan pertanian rakyat.' },
-  { number: 12, name: 'Jingin', slug: 'jingin', potentialSummary: 'Budidaya ikan air tawar kolam tanah, pembenihan nila, serta pembibitan aneka tanaman.' },
+  { number: 1, name: 'Sawahan', slug: 'sawahan', dukuhName: 'Supriyono', potentialSummary: 'Sentra pertanian padi sawah utama dan lumbung pangan desa dengan hamparan irigasi lancar.' },
+  { number: 2, name: 'Jumeneng', slug: 'jumeneng', dukuhName: 'Asto Nur Wimantoro', potentialSummary: 'Pertanian agrikultur padi berkelanjutan dan pengembangan perikanan kolam air tawar.' },
+  { number: 3, name: 'Gerjen', slug: 'gerjen', dukuhName: 'Idham Purnomo Hadi', potentialSummary: 'UMKM pengrajin aktif, perdagangan warung sembako rakyat, dan jasa perbengkelan lokal.' },
+  { number: 4, name: 'Ngemplak', slug: 'ngemplak', dukuhName: 'Kharis Munandar', potentialSummary: 'Pertanian sawah terpadu, gudang lumbung pangan desa, dan penampungan hasil bumi.' },
+  { number: 5, name: 'Kamal Kulon', slug: 'kamal-kulon', dukuhName: null, potentialSummary: 'Budidaya holtikultura sayuran pekarangan, cabai rawit, dan perikanan kolam terpal.' },
+  { number: 6, name: 'Sompokan', slug: 'sompokan', dukuhName: 'Marsudi', potentialSummary: 'Pertanian sawah produktif dan paguyuban pelestari kesenian tradisional karawitan.' },
+  { number: 7, name: 'Kregolan', slug: 'kregolan', dukuhName: 'Ahmad Budi Cahyono', potentialSummary: 'Sentra kelompok ternak kambing gibas/etawa dan aneka produksi olahan camilan kering.' },
+  { number: 8, name: 'Mangsel', slug: 'mangsel', dukuhName: 'Heri Handayatno', potentialSummary: 'Potensi eduwisata perdesaan terpadu: kebun holtikultura, tempe rumahan, dan peternakan.' },
+  { number: 9, name: 'Daplokan', slug: 'daplokan', dukuhName: 'Koko Dewanto', potentialSummary: 'Pertanian padi sawah subur dan berkembangnya aneka industri makanan olahan rumahan.' },
+  { number: 10, name: 'Kasuran', slug: 'kasuran', dukuhName: 'Suparman', potentialSummary: 'Pengrajin lokal anyaman bambu, perkakas desa, dan komoditas tanaman pangan palawija.' },
+  { number: 11, name: 'Mriyan', slug: 'mriyan', dukuhName: 'Weda Sunarya', potentialSummary: 'Paguyuban kebudayaan warga yang aktif, tradisi gotong royong, dan pertanian rakyat.' },
+  { number: 12, name: 'Jingin', slug: 'jingin', dukuhName: null, potentialSummary: 'Budidaya ikan air tawar kolam tanah, pembenihan nila, serta pembibitan aneka tanaman.' },
   {
     number: 13,
     name: 'Jamblangan',
     slug: 'jamblangan',
+    dukuhName: 'Surtiningsih',
     isHistoricalCore: true,
     potentialSummary: 'Rumah kesenian Jathilan "Turonggo Bekso Tomo" yang tersohor serta bentangan sawah subur.',
   },
@@ -56,7 +65,7 @@ export const OFFICIALS = [
     kind: 'CARIK',
     positionTitle: 'Carik (Sekretaris Kalurahan)',
     positionAlias: 'Carik',
-    name: null,
+    name: 'Irvan Susanto',
     remit: 'Membantu Lurah memimpin kesekretariatan kalurahan, urusan administrasi umum, keuangan, dan perencanaan program.',
     sortOrder: 2,
   },
@@ -68,23 +77,23 @@ export const OFFICIALS = [
     remit: 'Menangani tata keprajan, pembinaan trantibum, ketenteraman masyarakat, kependudukan, serta pertanahan kalurahan (Sultan Ground).',
     sortOrder: 3,
     internalNote:
-      'TODO: VERIFY WITH KALURAHAN — kemungkinan jabatan yang sama dengan "Kasi Tata Pemerintahan" (Rini Sapta Wadani). Sumber memakai dua penyebutan berbeda; jangan digabung tanpa konfirmasi.',
+      'TODO: VERIFY WITH KALURAHAN — C14: previously carried "Rini Sapta Wadani" under the separate "Kasi Tata Pemerintahan" entry below, sourced from the concept PDF (p5/p7). The kalurahan\'s own ID card (28 Agustus 2026) names her Kaur Tata Usaha & Umum instead — a different position, not this one. Her name has moved there; this office\'s real occupant is still unverified.',
   },
   {
     kind: 'KASI',
     positionTitle: 'Kasi Tata Pemerintahan',
     positionAlias: null,
-    name: 'Rini Sapta Wadani',
+    name: null,
     remit: 'Petugas penanggung jawab pengaduan masyarakat Kalurahan Margomulyo.',
     sortOrder: 4,
     internalNote:
-      'TODO: VERIFY WITH KALURAHAN — sumber menyebut jabatan ini terpisah dari "Kepala Seksi Pemerintahan (Jagabaya)".',
+      'TODO: VERIFY WITH KALURAHAN — C14: this title was only ever attached to Rini Sapta Wadani (concept PDF p5/p7), and she is now verified (28 Agustus 2026 ID card) to hold Kaur Tata Usaha & Umum instead. Whether "Kasi Tata Pemerintahan" is a real, separately-occupied position or a mislabel of "Kepala Seksi Pemerintahan (Jagabaya)" above remains unconfirmed.',
   },
   {
     kind: 'KASI',
     positionTitle: 'Kepala Seksi Pembangunan & Kemakmuran',
     positionAlias: 'Ulu-Ulu',
-    name: null,
+    name: 'Agus Purwanto',
     remit: 'Mengelola pembangunan infrastruktur fisik, pengairan pertanian, lingkungan hidup, ketahanan pangan, dan pemberdayaan ekonomi warga.',
     sortOrder: 5,
   },
@@ -92,7 +101,7 @@ export const OFFICIALS = [
     kind: 'KASI',
     positionTitle: 'Kepala Seksi Kemasyarakatan & Sosial',
     positionAlias: 'Kamituwa',
-    name: null,
+    name: 'Prasetya Sujanarka',
     remit: 'Melaksanakan pembinaan kesejahteraan sosial, kebudayaan, keagamaan, kesehatan masyarakat, perlindungan perempuan dan anak.',
     sortOrder: 6,
   },
@@ -100,15 +109,16 @@ export const OFFICIALS = [
     kind: 'KAUR',
     positionTitle: 'Kaur Tata Usaha & Umum',
     positionAlias: 'Tata Laksana',
-    name: null,
+    name: 'Rini Sapta Wadani',
     remit: 'Pengelolaan surat masuk/keluar, inventaris aset, dan rumah tangga kalurahan.',
     sortOrder: 7,
+    internalNote: 'C14: name moved here from "Kasi Tata Pemerintahan" per the 28 Agustus 2026 kalurahan ID card. See docs/SOURCE_DATA.md §4 C14.',
   },
   {
     kind: 'KAUR',
     positionTitle: 'Kaur Keuangan',
     positionAlias: 'Danarta',
-    name: null,
+    name: 'Refiana Putri Sukmajati',
     remit: 'Pengelolaan kas kalurahan, pelaporan APBKal, dan perpajakan.',
     sortOrder: 8,
   },
@@ -116,10 +126,24 @@ export const OFFICIALS = [
     kind: 'KAUR',
     positionTitle: 'Kaur Perencanaan',
     positionAlias: 'Pangripta',
-    name: null,
+    name: 'Septiana Dwi Cahyani',
     remit: 'Penyusunan RKP Kalurahan, RPJM Kalurahan, dan evaluasi kinerja.',
     sortOrder: 9,
   },
+] as const;
+
+/**
+ * General kalurahan staff — a tier the concept PDF never describes at all.
+ * New scope from the second §3.4 source (kalurahan ID cards, 28 Agustus
+ * 2026), not a resolved V01 gap, so held separately from OFFICIALS and
+ * seeded under OfficialKind.OTHER rather than SOTK.
+ */
+export const STAFF = [
+  { name: 'Sigit Tri Hastomo', sortOrder: 1 },
+  { name: 'Ratna Adi Kurniawan', sortOrder: 2 },
+  { name: 'Lilik Sugiarto', sortOrder: 3 },
+  { name: 'Nugroho Margo Utomo', sortOrder: 4 },
+  { name: 'Nita Budi Lestari', sortOrder: 5 },
 ] as const;
 
 /**

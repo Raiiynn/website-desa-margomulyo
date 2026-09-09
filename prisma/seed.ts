@@ -68,6 +68,7 @@ import {
   PADUKUHAN,
   RELIGIONS,
   SITE_SETTINGS,
+  STAFF,
   STATISTICS_REFERENCE_DATE,
   STATISTICS_SOURCE_LABEL,
 } from './seed-data/village';
@@ -167,10 +168,18 @@ async function seedGovernment(): Promise<void> {
   }
   log('officials (SOTK)', OFFICIALS.length);
 
-  // One Dukuh position per padukuhan. Names are NULL: V01 records that the
-  // source verifies the offices but names none of the 13 occupants.
+  // One Dukuh position per padukuhan. `dukuhName` in the PADUKUHAN seed data
+  // (V01, narrowed) carries the verified name where one exists — 11 of 13,
+  // per the 28 Agustus 2026 kalurahan ID cards — and stays NULL for Kamal
+  // Kulon and Jingin, which were not in that batch.
+  const dukuhNameBySlug = new Map<string, string | null>(
+    PADUKUHAN.map((p) => [p.slug, p.dukuhName ?? null]),
+  );
   const padukuhanRows = await db.padukuhan.findMany({ orderBy: { number: 'asc' } });
+  let namedDukuh = 0;
   for (const p of padukuhanRows) {
+    const dukuhName = dukuhNameBySlug.get(p.slug) ?? null;
+    if (dukuhName !== null) namedDukuh += 1;
     await db.governmentOfficial.upsert({
       where: { padukuhanId_kind: { padukuhanId: p.id, kind: 'DUKUH' } },
       create: {
@@ -178,18 +187,48 @@ async function seedGovernment(): Promise<void> {
         positionTitle: `Dukuh ${p.name}`,
         positionAlias: 'Dukuh',
         remit: `Pamong kewilayahan Padukuhan ${p.name}.`,
-        name: null,
+        name: dukuhName,
         padukuhanId: p.id,
         sortOrder: 100 + p.number,
       },
+      // `name` is included only once verified. Until then this must not
+      // overwrite a value someone entered by hand in the meantime — the same
+      // reasoning `update:` already applies to positionTitle/remit, extended
+      // to the one field that can legitimately vary per row.
       update: {
         positionTitle: `Dukuh ${p.name}`,
         remit: `Pamong kewilayahan Padukuhan ${p.name}.`,
         sortOrder: 100 + p.number,
+        ...(dukuhName !== null ? { name: dukuhName } : {}),
       },
     });
   }
-  log('officials (dukuh, unnamed)', padukuhanRows.length);
+  log('officials (dukuh, named)', namedDukuh);
+  log('officials (dukuh, unnamed)', padukuhanRows.length - namedDukuh);
+
+  // General kalurahan staff (OfficialKind.OTHER) — new scope from the second
+  // §3.4 source, not part of the SOTK structure above. No compound unique
+  // constraint fits this row shape, so this mirrors the OFFICIALS pattern
+  // above (findFirst, then create or update) rather than upsert.
+  for (const s of STAFF) {
+    const existing = await db.governmentOfficial.findFirst({
+      where: { positionTitle: 'Staf Kalurahan', name: s.name },
+    });
+    const data = {
+      kind: 'OTHER' as OfficialKind,
+      positionTitle: 'Staf Kalurahan',
+      positionAlias: null,
+      name: s.name,
+      remit: null,
+      sortOrder: 200 + s.sortOrder,
+    };
+    if (existing === null) {
+      await db.governmentOfficial.create({ data });
+    } else {
+      await db.governmentOfficial.update({ where: { id: existing.id }, data });
+    }
+  }
+  log('officials (staff)', STAFF.length);
 
   for (const term of LEADERSHIP_TERMS) {
     await db.leadershipTerm.upsert({
@@ -645,7 +684,7 @@ async function main(): Promise<void> {
   process.stdout.write('  C08 bentang wilayah                         -> not seeded\n');
   process.stdout.write('  C09 UMKM daily capacity                     -> NULL\n');
   process.stdout.write('  C10 UMKM WhatsApp (duplicates the hotline)  -> NULL\n');
-  process.stdout.write('  V01 13 dukuh + 7 pamong names               -> NULL\n');
+  process.stdout.write('  V01 (narrowed) 2 dukuh + Jagabaya names     -> NULL\n');
   process.stdout.write('  V04 document files, V05 file sizes          -> NULL\n');
   process.stdout.write('  V11 two truncated headlines                 -> DRAFT, not published\n');
   process.stdout.write('  V12 two agenda items without a full date    -> not seeded\n\n');

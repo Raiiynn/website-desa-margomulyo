@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { Container } from '@/components/ui/Container';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { SectionHeader } from '@/components/ui/SectionHeader';
@@ -20,11 +21,17 @@ export const metadata: Metadata = {
 export const revalidate = 300;
 
 export default async function PemerintahanPage() {
-  const [OFFICIALS, INSTITUTIONS, TYPED_LEADERSHIP_TERMS] = await Promise.all([
+  const [allOfficials, INSTITUTIONS, TYPED_LEADERSHIP_TERMS] = await Promise.all([
     listActiveOfficials(),
     listInstitutions(),
     listLeadershipTerms(),
   ]);
+
+  // Staf Kalurahan (OfficialKind.OTHER) is new scope the concept PDF never
+  // described (SOURCE_DATA §3.4, second source) and is shown as its own
+  // section rather than mixed into the SOTK/Dukuh structure below.
+  const OFFICIALS = allOfficials.filter((o) => o.kind !== 'OTHER');
+  const STAFF = allOfficials.filter((o) => o.kind === 'OTHER');
 
   return (
     <div className="py-8 sm:py-12">
@@ -61,7 +68,7 @@ export default async function PemerintahanPage() {
 
               return (
                 <div
-                  key={official.positionTitle}
+                  key={official.id}
                   className={`rounded-card border p-6 flex flex-col justify-between bg-white transition-all ${
                     isLurah
                       ? 'border-navy-900 bg-band shadow-sm md:col-span-2 lg:col-span-3'
@@ -69,28 +76,50 @@ export default async function PemerintahanPage() {
                   }`}
                 >
                   <div>
-                    <div className="flex items-center justify-between gap-2 mb-3">
-                      <span className="text-xs font-semibold uppercase tracking-wider text-blue-700">
-                        {official.positionAlias ?? official.kind}
-                      </span>
-                      {isLurah && <Badge variant="gold">Petahana 2021–2027</Badge>}
-                    </div>
-
-                    <h3 className={`font-bold text-navy-900 ${isLurah ? 'text-xl' : 'text-base'}`}>
-                      {official.positionTitle}
-                    </h3>
-
-                    <div className="mt-2 text-sm font-semibold">
-                      {isNamed ? (
-                        <span className="text-green-700 font-medium flex items-center gap-1.5">
-                          <CheckCircle size={15} />
-                          <span>{official.name}</span>
-                        </span>
-                      ) : (
-                        <span className="text-text-muted italic font-normal text-xs">
-                          Pejabat Definitif Terverifikasi Kalurahan
-                        </span>
+                    <div className={`flex gap-4 mb-3 ${isLurah ? 'items-start' : 'items-center'}`}>
+                      {official.photo && (
+                        // Verified, rights-cleared portrait (SOURCE_DATA V16 /
+                        // second §3.4 source). No decorative crop or filter —
+                        // an official record photo, shown as supplied.
+                        <div
+                          className={`relative shrink-0 rounded-card overflow-hidden border border-border ${
+                            isLurah ? 'h-28 w-28 sm:h-32 sm:w-32' : 'h-16 w-16'
+                          }`}
+                        >
+                          <Image
+                            src={official.photo.url}
+                            alt={official.photo.alt ?? `Potret ${official.name ?? official.positionTitle}`}
+                            fill
+                            sizes={isLurah ? '128px' : '64px'}
+                            className="object-cover"
+                          />
+                        </div>
                       )}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-xs font-semibold uppercase tracking-wider text-blue-700">
+                            {official.positionAlias ?? official.kind}
+                          </span>
+                          {isLurah && <Badge variant="gold">Petahana 2021–2027</Badge>}
+                        </div>
+
+                        <h3 className={`font-bold text-navy-900 ${isLurah ? 'text-xl mt-1' : 'text-base'}`}>
+                          {official.positionTitle}
+                        </h3>
+
+                        <div className="mt-2 text-sm font-semibold">
+                          {isNamed ? (
+                            <span className="text-green-700 font-medium flex items-center gap-1.5">
+                              <CheckCircle size={15} />
+                              <span>{official.name}</span>
+                            </span>
+                          ) : (
+                            <span className="text-text-muted italic font-normal text-xs">
+                              Pejabat Definitif Terverifikasi Kalurahan
+                            </span>
+                          )}
+                        </div>
+                      </div>
                     </div>
 
                     <p className="mt-3 text-xs text-text-body leading-relaxed">
@@ -107,6 +136,52 @@ export default async function PemerintahanPage() {
             })}
           </div>
         </div>
+
+        {/* 1b. Staf Kalurahan — new scope, second §3.4 source, kept as its own
+             list rather than mixed into the SOTK/Dukuh structure above. */}
+        {STAFF.length > 0 && (
+          <div className="mb-20">
+            <SectionHeader
+              eyebrow="Aparatur Pendukung"
+              title="Staf Kalurahan Margomulyo"
+              description="Staf yang mendukung pelaksanaan tugas administratif dan operasional sehari-hari kalurahan."
+            />
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+              {STAFF.map((staff) => (
+                <div
+                  key={staff.id}
+                  className="rounded-card border border-border bg-white p-4 flex flex-col items-center text-center gap-2 hover:border-field-border hover:shadow-sm transition-all"
+                >
+                  {staff.photo ? (
+                    <div className="relative h-16 w-16 rounded-full overflow-hidden border border-border">
+                      <Image
+                        src={staff.photo.url}
+                        alt={staff.photo.alt ?? `Potret ${staff.name}`}
+                        fill
+                        sizes="64px"
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className="h-16 w-16 rounded-full bg-band flex items-center justify-center text-blue-700 font-serif font-bold"
+                      aria-hidden="true"
+                    >
+                      {(staff.name ?? '?').charAt(0)}
+                    </div>
+                  )}
+                  <span className="text-sm font-semibold text-navy-900 leading-tight">
+                    {staff.name}
+                  </span>
+                  <span className="text-[11px] text-text-muted uppercase tracking-wider">
+                    {staff.positionTitle}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* 2. Lembaga Kemasyarakatan Kalurahan & BPKal */}
         <div className="mb-20">

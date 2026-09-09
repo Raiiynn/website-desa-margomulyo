@@ -2,7 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import { SITE_SUBTITLE } from '@/lib/site';
 import { formatDateIndonesian, formatRupiah } from '@/lib/format';
+import Image from 'next/image';
 import {
+  getLurahPhoto,
   getPublicSettings,
   getPublishedDemographics,
   listGovernancePillars,
@@ -41,6 +43,7 @@ export default async function HomePage() {
     BUDGET,
     DOCUMENTS,
     LOCAL_POTENTIALS,
+    lurahPhoto,
   ] = await Promise.all([
     getPublicSettings(),
     getPublishedDemographics(),
@@ -51,6 +54,7 @@ export default async function HomePage() {
     getPublishedBudget(FISCAL_YEAR),
     listPublishedDocuments(),
     listPublishedPotentials(),
+    getLurahPhoto(),
   ]);
 
   if (DEMOGRAPHICS === null) {
@@ -159,13 +163,27 @@ export default async function HomePage() {
             {/* Lurah Portrait & Credentials Block */}
             <div className="lg:col-span-5">
               <div className="relative rounded-card border border-border bg-band p-8 text-center sm:text-left flex flex-col items-center sm:items-start">
-                {/* Official Monogram Photo Frame */}
-                <div className="h-44 w-44 rounded-card bg-navy-900 text-white flex flex-col items-center justify-center border-4 border-white shadow-md relative overflow-hidden mb-6">
-                  <span className="font-serif text-5xl font-bold text-gold-600">EPM</span>
-                  <span className="text-[11px] uppercase tracking-widest text-white/70 mt-2">
-                    Lurah Margomulyo
-                  </span>
-                </div>
+                {/* Official portrait, falling back to a monogram until one
+                    exists (SOURCE_DATA V16: rights-cleared photography). */}
+                {lurahPhoto ? (
+                  <div className="h-44 w-44 rounded-card border-4 border-white shadow-md relative overflow-hidden mb-6">
+                    <Image
+                      src={lurahPhoto.url}
+                      alt={lurahPhoto.alt ?? 'Potret Lurah Margomulyo'}
+                      fill
+                      sizes="176px"
+                      priority
+                      className="object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="h-44 w-44 rounded-card bg-navy-900 text-white flex flex-col items-center justify-center border-4 border-white shadow-md relative overflow-hidden mb-6">
+                    <span className="font-serif text-5xl font-bold text-gold-600">EPM</span>
+                    <span className="text-[11px] uppercase tracking-widest text-white/70 mt-2">
+                      Lurah Margomulyo
+                    </span>
+                  </div>
+                )}
 
                 <div className="space-y-1">
                   <span className="text-xs font-semibold uppercase tracking-wider text-blue-700">

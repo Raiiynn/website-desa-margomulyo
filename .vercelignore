@@ -1,0 +1,17 @@
+# Vercel CLI uploads the local working directory more literally than a
+# git-connected deploy does, so exclusions here are needed even though
+# .gitignore already covers most of these paths.
+#
+# docs/source/ holds the original concept PDF (174 MB — far over Vercel's
+# 100 MB per-file limit) and its rendered page images. Neither is runtime
+# code; both exist only for local content-verification against
+# docs/SOURCE_DATA.md and are never imported by the application.
+docs/source/
+
+# Regenerated on every build; never needed in the upload.
+.next/
+node_modules/
+
+# Local dev/test artifacts.
+*.log
+.env.local

@@ -61,7 +61,10 @@ describe('Phase 0 governance documents', () => {
     const register = read('docs/SOURCE_DATA.md');
     const conflicts = new Set(register.match(/\*\*C\d{2}\*\*/g) ?? []);
     const verifications = new Set(register.match(/\*\*V\d{2}\*\*/g) ?? []);
-    expect(conflicts.size).toBe(13);
+    // 14 conflicts: C14 added for Rini Sapta Wadani's position (concept PDF
+    // vs. the kalurahan's 28 Agustus 2026 ID cards). V01 was narrowed by the
+    // same source, not replaced, so the verification count is unchanged.
+    expect(conflicts.size).toBe(14);
     expect(verifications.size).toBe(19);
   });
 });

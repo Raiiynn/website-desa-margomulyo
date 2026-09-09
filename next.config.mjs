@@ -18,9 +18,16 @@ const nextConfig = {
   trailingSlash: false,
 
   images: {
-    // Phase 5 adds the Supabase storage host here once the bucket exists.
-    // Kept empty deliberately: no remote host is trusted by default.
-    remotePatterns: [],
+    // The "public" bucket now exists (official portraits, uploaded via
+    // Supabase Storage). Scoped to that one bucket's path, not the whole
+    // Supabase host, so a future private bucket is not implicitly trusted.
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+        pathname: '/storage/v1/object/public/public/**',
+      },
+    ],
     formats: ['image/avif', 'image/webp'],
   },
 

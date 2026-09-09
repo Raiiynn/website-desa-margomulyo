@@ -154,9 +154,22 @@ describe('withheld figures are absent, not guessed', () => {
     }
   });
 
-  it('V01 — only the two named officials have a name', () => {
-    const named = OFFICIALS.filter((o) => o.name !== null).map((o) => o.name);
-    expect(named).toEqual(['Eko Puji Mulyanto', 'Rini Sapta Wadani']);
+  it('V01 (narrowed) — exactly Jagabaya and Kasi Tata Pemerintahan remain unnamed', () => {
+    // Resolved 28 Agustus 2026 by the kalurahan's own official ID cards
+    // (SOURCE_DATA §3.4, second source). C14: Rini Sapta Wadani moved from
+    // "Kasi Tata Pemerintahan" (concept PDF p5/p7) to "Kaur Tata Usaha &
+    // Umum" — a different position, not an alias — leaving both Jagabaya
+    // and Kasi Tata Pemerintahan without a verified occupant.
+    const unnamed = OFFICIALS.filter((o) => o.name === null).map((o) => o.positionTitle);
+    expect(unnamed.sort()).toEqual(
+      ['Kasi Tata Pemerintahan', 'Kepala Seksi Pemerintahan'].sort(),
+    );
+
+    const tataLaksana = OFFICIALS.find((o) => o.positionAlias === 'Tata Laksana');
+    expect(tataLaksana?.name).toBe('Rini Sapta Wadani');
+
+    const kasiTataPemerintahan = OFFICIALS.find((o) => o.positionTitle === 'Kasi Tata Pemerintahan');
+    expect(kasiTataPemerintahan?.name).toBeNull();
   });
 
   it('V11 — the two truncated headlines are not published', () => {

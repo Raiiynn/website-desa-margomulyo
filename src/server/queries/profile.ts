@@ -4,6 +4,7 @@ import { cache } from 'react';
 
 import { db } from '@/server/db';
 import { dateToIsoDay, optionalDecimalToString } from '@/server/serialize';
+import { publicMediaUrl } from '@/lib/media';
 
 /**
  * Village profile, government structure and demographic statistics.
@@ -99,37 +100,66 @@ export const getPublishedDemographics = cache(
 );
 
 export interface OfficialDto {
+  /** Stable React key — several `positionTitle` values repeat (e.g. every Staf Kalurahan row). */
+  id: string;
   kind: string;
   positionTitle: string;
   positionAlias: string | null;
   remit: string | null;
   /**
-   * NULL for every position except the Lurah and one Kasi.
-   * SOURCE_DATA V01: the source verifies the offices, not their occupants.
-   * The UI must show the office without inventing a name.
+   * NULL where the office is verified but its occupant is not.
+   * SOURCE_DATA V01 (narrowed): 2 Dukuh and Kepala Seksi Pemerintahan
+   * (Jagabaya) remain unverified. The UI must show the office without
+   * inventing a name.
    */
   name: string | null;
   padukuhan: { name: string; slug: string } | null;
+  /** Null until a verified, rights-cleared portrait exists (SOURCE_DATA V16). */
+  photo: { url: string; alt: string | null } | null;
 }
 
 export async function listActiveOfficials(): Promise<OfficialDto[]> {
   const rows = await db.governmentOfficial.findMany({
     where: { isActive: true },
     orderBy: { sortOrder: 'asc' },
-    include: { padukuhan: { select: { name: true, slug: true } } },
+    include: {
+      padukuhan: { select: { name: true, slug: true } },
+      photoMedia: { select: { bucket: true, path: true, alt: true } },
+    },
   });
 
   // `internalNote` is intentionally not selected: it carries open verification
   // questions for staff and must never reach a public page.
   return rows.map((row) => ({
+    id: row.id,
     kind: row.kind,
     positionTitle: row.positionTitle,
     positionAlias: row.positionAlias,
     remit: row.remit,
+    photo:
+      row.photoMedia === null
+        ? null
+        : { url: publicMediaUrl(row.photoMedia.bucket, row.photoMedia.path), alt: row.photoMedia.alt },
     name: row.name,
     padukuhan: row.padukuhan,
   }));
 }
+
+/**
+ * The Lurah's own photo, for the homepage sambutan card. A single-row lookup
+ * rather than filtering `listActiveOfficials()`, so that page's hot path
+ * doesn't fetch and shape all 27 officials to use one.
+ */
+export const getLurahPhoto = cache(
+  async (): Promise<{ url: string; alt: string | null } | null> => {
+    const row = await db.governmentOfficial.findFirst({
+      where: { kind: 'LURAH', isActive: true },
+      select: { photoMedia: { select: { bucket: true, path: true, alt: true } } },
+    });
+    if (row?.photoMedia === undefined || row.photoMedia === null) return null;
+    return { url: publicMediaUrl(row.photoMedia.bucket, row.photoMedia.path), alt: row.photoMedia.alt };
+  },
+);
 
 export async function listLeadershipTerms(): Promise<
   {
