@@ -209,10 +209,11 @@ export default async function HomePage() {
 
             {/* Statement and Visi-Misi */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="flex items-center gap-2.5 text-xs font-semibold tracking-wider uppercase text-blue-700">
-                <span className="h-0.5 w-6 rounded-full bg-blue-700" aria-hidden="true" />
-                <span>Sambutan Lurah Margomulyo</span>
-              </div>
+              {/* Eyebrow without the concept's short rule, matching
+                  SectionHeader — see docs/DESIGN_REFERENCE.md §7. */}
+              <p className="text-xs font-semibold tracking-wider uppercase text-blue-700">
+                Sambutan Lurah Margomulyo
+              </p>
 
               <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-navy-900 tracking-tight leading-snug">
                 {getSetting('village.sambutanHeading')}

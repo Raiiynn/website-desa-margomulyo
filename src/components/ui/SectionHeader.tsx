@@ -30,20 +30,17 @@ export function SectionHeader({
       className={`flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 md:mb-12 ${className}`}
     >
       <div className={`max-w-2xl ${isCenter ? 'mx-auto text-center' : ''}`}>
-        {/* Eyebrow triad element with short rule */}
-        <div
-          className={`flex items-center gap-2.5 text-xs font-semibold tracking-wider uppercase mb-3 ${
+        {/* Eyebrow label. The concept's P01 triad puts a short rule before this
+            label; it is deliberately dropped in production — see
+            docs/DESIGN_REFERENCE.md §7. Not a heading (§5, A-level outline
+            rule): the serif <h2> below owns the section's place in the outline. */}
+        <p
+          className={`text-xs font-semibold tracking-wider uppercase mb-3 ${
             eyebrowColor === 'gold' ? 'text-gold-750' : 'text-blue-700'
-          } ${isCenter ? 'justify-center' : ''}`}
+          }`}
         >
-          <span
-            className={`h-0.5 w-6 rounded-full ${
-              eyebrowColor === 'gold' ? 'bg-gold-600' : 'bg-blue-700'
-            }`}
-            aria-hidden="true"
-          />
-          <span>{eyebrow}</span>
-        </div>
+          {eyebrow}
+        </p>
 
         {/* Serif headline */}
         <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-navy-900 tracking-tight leading-tight">
