@@ -86,9 +86,14 @@ describe('published content only reaches the public site', () => {
   });
 
   it('getSetting returns verified values and never invents one', () => {
+    // Differs from the source PDF on purpose: p1 reads "website resmi", and
+    // the word was dropped by the owner's explicit decision because this site
+    // is not the designated official one (margomulyosid.slemankab.go.id is).
+    // Recorded in docs/SOURCE_DATA.md §3.1 — this is not drift to be undone.
     expect(fixtures.getSetting('village.sambutanQuote')).toContain(
-      'Selamat datang di website resmi Kalurahan Margomulyo',
+      'Selamat datang di website Kalurahan Margomulyo',
     );
+    expect(fixtures.getSetting('village.sambutanQuote')).not.toContain('website resmi');
     // An unknown key must yield the caller's default, not a fabricated string.
     expect(fixtures.getSetting('village.doesNotExist')).toBe('');
     expect(fixtures.getSetting('village.doesNotExist', 'fallback')).toBe('fallback');

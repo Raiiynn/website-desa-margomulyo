@@ -315,8 +315,14 @@ export const SITE_SETTINGS = [
   },
   {
     key: 'village.sambutanQuote',
+    // DIVERGENSI SENGAJA dari PDF sumber — jangan "diperbaiki" kembali.
+    // PDF p1 menulis "website resmi"; kata "resmi" dihapus atas keputusan
+    // eksplisit pemilik situs (11 September 2026) karena situs ini belum
+    // ditetapkan resmi — situs resmi kalurahan masih
+    // margomulyosid.slemankab.go.id, sehingga klaim itu belum akurat.
+    // Tercatat di docs/SOURCE_DATA.md §3.1.
     value:
-      'Selamat datang di website resmi Kalurahan Margomulyo. Website ini menjadi media informasi, pelayanan dan keterbukaan Pemerintah Kalurahan Margomulyo kepada masyarakat.',
+      'Selamat datang di website Kalurahan Margomulyo. Website ini menjadi media informasi, pelayanan dan keterbukaan Pemerintah Kalurahan Margomulyo kepada masyarakat.',
     group: 'identity',
     label: 'Kutipan sambutan Lurah',
     type: 'TEXT',
