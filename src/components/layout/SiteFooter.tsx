@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { SITE_TITLE, SITE_SUBTITLE } from '@/lib/site';
 import { Container } from '@/components/ui/Container';
 import { MapPin, Phone, Mail, Clock, ArrowRight } from '@/components/ui/Icons';
@@ -31,9 +32,13 @@ export async function SiteFooter() {
           {/* Zone 1: Institutional Statement & Sleman Sembada Mark */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center font-serif font-bold text-lg text-gold-400">
-                M
-              </div>
+              <Image
+                src="/lambang-sleman.png"
+                alt=""
+                width={34}
+                height={40}
+                className="h-10 w-auto shrink-0"
+              />
               <div>
                 <h3 className="font-serif text-lg font-bold text-white leading-tight">
                   {SITE_TITLE}

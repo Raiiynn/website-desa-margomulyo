@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 
@@ -91,9 +92,13 @@ export function AdminSidebar() {
       {/* Brand */}
       <div className="px-5 py-5 border-b border-white/[0.08]">
         <Link href="/admin" className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-white/[0.07] border border-white/[0.12] flex items-center justify-center shrink-0">
-            <span className="font-serif text-base font-bold text-gold-400">M</span>
-          </div>
+          <Image
+            src="/lambang-sleman.png"
+            alt=""
+            width={31}
+            height={36}
+            className="h-9 w-auto shrink-0"
+          />
           <div className="flex flex-col">
             <span className="text-sm font-bold text-white leading-tight">Panel Pamong</span>
             <span className="text-[10px] text-white/40 uppercase tracking-widest">Margomulyo</span>

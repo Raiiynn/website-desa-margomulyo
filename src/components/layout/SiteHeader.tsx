@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   SITE,
@@ -59,10 +60,19 @@ export function SiteHeader() {
           className="group flex items-center gap-3.5 focus-visible:outline-2 focus-visible:outline-blue-700 rounded-lg p-1 -ml-1 transition-opacity"
           aria-label="Beranda Kalurahan Margomulyo"
         >
-          {/* Official Emblem Mark Badge */}
-          <div className="h-12 w-12 rounded-card bg-navy-900 text-white flex items-center justify-center font-serif font-bold text-xl tracking-tight shadow-sm border border-blue-700/30 shrink-0 group-hover:bg-blue-700 transition-colors">
-            <span className="text-gold-600">M</span>
-          </div>
+          {/* Lambang resmi Kabupaten Sleman. Dipakai apa adanya: lambang
+              daerah sudah membawa bingkai dan warnanya sendiri, jadi tidak
+              dibungkus kotak lagi dan tidak diberi efek hover — bentuk dan
+              warnanya tidak boleh berubah karena interaksi UI. `w-auto`
+              menjaga rasio asli 498:586 agar lambang tidak gepeng. */}
+          <Image
+            src="/lambang-sleman.png"
+            alt=""
+            width={48}
+            height={56}
+            priority
+            className="h-14 w-auto shrink-0"
+          />
 
           <div className="flex flex-col">
             <span className="font-serif text-lg sm:text-xl font-bold tracking-tight text-navy-900 leading-none group-hover:text-blue-700 transition-colors">

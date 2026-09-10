@@ -2,6 +2,7 @@
 
 import React, { useState, useTransition } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 
@@ -108,11 +109,14 @@ export default function AdminLoginPage() {
         <div className="w-full max-w-md">
           {/* Brand identity block */}
           <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-white/[0.07] border border-white/[0.12] mb-5 backdrop-blur-sm">
-              <span className="font-serif text-2xl font-bold text-gold-400">
-                M
-              </span>
-            </div>
+            <Image
+              src="/lambang-sleman.png"
+              alt=""
+              width={54}
+              height={64}
+              priority
+              className="block mx-auto mb-5 h-16 w-auto"
+            />
 
             <h1 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-tight">
               Panel Pamong
