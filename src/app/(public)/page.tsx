@@ -341,12 +341,14 @@ export default async function HomePage() {
                     </div>
                   </div>
 
-                  <span
+                  <Image
+                    src="/lambang-sleman.png"
+                    alt=""
                     aria-hidden="true"
-                    className="hidden sm:flex h-12 w-12 shrink-0 items-center justify-center rounded-card border border-white/20 bg-white/5 font-serif text-xl font-bold text-gold-400"
-                  >
-                    M
-                  </span>
+                    width={41}
+                    height={48}
+                    className="hidden sm:block h-12 w-auto shrink-0"
+                  />
                 </div>
 
                 <div className="p-6 sm:p-8 flex flex-col justify-between flex-1">
