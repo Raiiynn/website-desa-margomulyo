@@ -170,7 +170,14 @@ export async function SiteFooter() {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/60">
-          <p>© {new Date().getFullYear()} Pemerintah Kalurahan Margomulyo. Seluruh hak cipta dilindungi.</p>
+          <div className="text-center sm:text-left">
+            <p>© {new Date().getFullYear()} Pemerintah Kalurahan Margomulyo. Seluruh hak cipta dilindungi.</p>
+            {/* Atribusi pembuat, sengaja lebih redup dari baris hak cipta di
+                atasnya: kalurahan yang memiliki situs ini, tim KKN yang
+                membangunnya. white/50 = 4.86:1 pada --color-navy-900, di atas
+                ambang AA 4.5:1 untuk teks kecil; white/40 hanya 3.62:1. */}
+            <p className="mt-1 text-white/50">Dibuat oleh KKN UII 73</p>
+          </div>
           <div className="flex items-center gap-6">
             <Link href="/transparansi" className="hover:text-white transition-colors">
               Keterbukaan Informasi Publik
